@@ -65,7 +65,7 @@ jobs:
       run: |
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker build -f Dockerfile -t hotsix .
-        docker tag kusitms ${{ secrets.DOCKER_USERNAME }}/hotsix
+        docker tag hotsix ${{ secrets.DOCKER_USERNAME }}/hotsix
         docker push ${{ secrets.DOCKER_USERNAME }}/hotsix
         
     # 서버에서 Docker 이미지 실행
