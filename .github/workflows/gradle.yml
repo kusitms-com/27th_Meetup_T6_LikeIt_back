@@ -67,3 +67,17 @@ jobs:
         docker build -f Dockerfile -t hotsix .
         docker tag kusitms ${{ secrets.DOCKER_USERNAME }}/hotsix
         docker push ${{ secrets.DOCKER_USERNAME }}/hotsix
+        
+    # 서버에서 Docker 이미지 실행
+    - name: EC2 Docker Run
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ubuntu
+        key: ${{ secrets.EC2_KEY }}
+        script: |
+          sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          sudo docker rm -f $(docker ps -qa)
+          sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/hotsix     
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/hotsix
+          sudo docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/hotsix
