@@ -17,6 +17,7 @@ public class OauthController {
 
     @GetMapping(value="/google/callback")
     public void callback (@RequestParam(name="code") String code) throws JsonProcessingException {
+        //swagger 설정
         oauthService.oauthLogin(code);
     }
 }
