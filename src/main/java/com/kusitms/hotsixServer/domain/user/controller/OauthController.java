@@ -31,5 +31,6 @@ public class OauthController {
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.LOGIN_SUCCESS.getMessage(),
                 this.oauthService.getUserInfo(code)));
+
     }
 }
