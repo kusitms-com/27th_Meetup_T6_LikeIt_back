@@ -37,6 +37,9 @@ public class TokenProvider implements InitializingBean {
 
     private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
 
+    @Value("${jwt.auth.secret}")
+    String auth;
+
     //생성자
     public TokenProvider(
             @Value("${jwt.secret}") String secret,
@@ -114,5 +117,30 @@ public class TokenProvider implements InitializingBean {
         User principal = new User(claims.getSubject(), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+    }
+
+    //refreshToken 정보 가져오기
+    public String getRefreshTokenInfo(String token) {
+        Claims claims = Jwts
+                .parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
+    }
+
+    public String reCreateToken(String username) {
+
+        long now = (new Date()).getTime();
+        Date validity = new Date(now + this.tokenValidityInMilliseconds);
+
+        return Jwts.builder()
+                .setSubject(username)
+                .claim(AUTHORITIES_KEY, auth)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(validity)
+                .compact();
     }
 }

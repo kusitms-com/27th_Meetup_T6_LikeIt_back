@@ -22,4 +22,18 @@ public class UserDto implements Serializable {
         }
 
     }
+
+    @Data
+    @Builder
+    public static class tokenResponse {
+        private final String atk;
+        private final String rtk;
+
+        public static tokenResponse response(String atk, String rtk) {
+            return tokenResponse.builder()
+                    .atk(atk)
+                    .rtk(rtk)
+                    .build();
+        }
+    }
 }
