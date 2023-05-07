@@ -21,6 +21,9 @@ import java.util.Map;
 @Slf4j
 public class GoogleOauth {
 
+    @Value("${app.google.url}")
+    private String GOOGLE_LOGIN_URL;
+
     @Value("${app.google.client.id}")
     private String GOOGLE_SNS_CLIENT_ID;
 
@@ -59,7 +62,6 @@ public class GoogleOauth {
     }
 
     public GoogleOauthToken getAccessToken(ResponseEntity<String> response) throws JsonProcessingException {
-        log.info("response.getBody() = " + response.getBody());
         GoogleOauthToken googleOauthToken= objectMapper.readValue(response.getBody(),GoogleOauthToken.class);
         return googleOauthToken;
     }
@@ -74,9 +76,6 @@ public class GoogleOauth {
         //HttpEntity를 하나 생성해 헤더를 담아서 restTemplate으로 구글과 통신하게 된다.
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity(headers);
         ResponseEntity<String> response = restTemplate.exchange(GOOGLE_SNS_USERINFO_URL, HttpMethod.GET,request,String.class);
-        log.info("response.getHeaders() = " + response.getHeaders());
-        log.info("responseEntity.getStatusCode()"+ response.getStatusCode());
-        log.info("response.getBody() = " + response.getBody());
         return response;
     }
 
@@ -86,4 +85,9 @@ public class GoogleOauth {
         return googleUser;
     }
 
+    public String getOauthRedirectURL() {
+        String reqUrl = GOOGLE_LOGIN_URL + "?client_id=" + GOOGLE_SNS_CLIENT_ID + "&redirect_uri=" + GOOGLE_SNS_CALLBACK_URL
+                + "&response_type=code&scope=email%20profile%20openid&access_type=offline";
+        return reqUrl;
+    }
 }
