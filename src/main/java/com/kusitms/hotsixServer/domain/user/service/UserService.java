@@ -54,10 +54,7 @@ public class UserService {
     //취향 카테고리 선택
     @Transactional
     public void setFilter(SetFilterDto dto){
-
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow();
-
-
 
         if(dto.getFilters().length>2) throw new BaseException(SET_FILTER_ERROR);
 
