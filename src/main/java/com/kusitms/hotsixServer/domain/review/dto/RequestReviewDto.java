@@ -13,6 +13,6 @@ public class RequestReviewDto {
     private Long placeId;
     private float starRating;
     private String content;
-    private String placeImg;
+    private String[] stickers;
 
 }
