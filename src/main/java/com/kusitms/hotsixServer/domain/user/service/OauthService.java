@@ -1,8 +1,13 @@
 package com.kusitms.hotsixServer.domain.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.kusitms.hotsixServer.domain.user.dto.GoogleOauthToken;
 import com.kusitms.hotsixServer.domain.user.dto.GoogleUser;
+import com.kusitms.hotsixServer.domain.user.dto.IdTokenDto;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
 import com.kusitms.hotsixServer.domain.user.entity.User;
 import com.kusitms.hotsixServer.domain.user.repository.UserRepository;
@@ -10,8 +15,8 @@ import com.kusitms.hotsixServer.global.config.jwt.RedisDao;
 import com.kusitms.hotsixServer.global.config.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,10 +24,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.time.Duration;
+import java.util.Collections;
 
 @Service
 @Slf4j
@@ -43,6 +55,9 @@ public class OauthService {
 
     private final RedisDao redisDao;
 
+    @Value("${app.google.android.client.id}")
+    private String GOOGLE_SNS_CLIENT_ID;
+
     public UserDto.socialLoginResponse getUserInfo(String code) throws JsonProcessingException {
 
         //구글로 일회성 코드를 보내 액세스 토큰이 담긴 응답객체를 받아옴
@@ -60,10 +75,10 @@ public class OauthService {
         return checkUserInDB(googleUser);
     }
 
-    public UserDto.socialLoginResponse checkUserInDB(GoogleUser googleUser){
+    public UserDto.socialLoginResponse checkUserInDB(GoogleUser googleUser) {
 
         //회원가입
-        if(!userRepository.existsByUserEmail(googleUser.getEmail())){
+        if (!userRepository.existsByUserEmail(googleUser.getEmail())) {
 
             User newUser = User.createUser(googleUser, passwordEncoder);
             Long id = userRepository.save(newUser).getId();
@@ -76,7 +91,7 @@ public class OauthService {
 
     }
 
-    public UserDto.socialLoginResponse oauthLogin(String email, Long id){
+    public UserDto.socialLoginResponse oauthLogin(String email, Long id) {
 
         // (1) authentication 객체 생성 후 SecurityContext에 등록
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, "google");
@@ -100,5 +115,39 @@ public class OauthService {
         String redirectURL = googleOauth.getOauthRedirectURL();
 
         response.sendRedirect(redirectURL);
+    }
+
+    @Transactional
+    public GoogleUser appGoogleLogin(IdTokenDto idTokenDto) throws GeneralSecurityException, IOException {
+        HttpTransport transport = new NetHttpTransport();
+        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
+                .setAudience(Collections.singletonList(GOOGLE_SNS_CLIENT_ID))
+                .build();
+
+        GoogleIdToken idToken = verifier.verify(idTokenDto.getIdToken());
+        if (idToken != null) {
+            Payload payload = idToken.getPayload();
+
+            String userId = payload.getSubject();
+            System.out.println("User ID: " + userId);
+
+            String email = payload.getEmail();
+            boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+            String name = (String) payload.get("name");
+            String pictureUrl = (String) payload.get("picture");
+            String locale = (String) payload.get("locale");
+            String familyName = (String) payload.get("family_name");
+            String givenName = (String) payload.get("given_name");
+
+            GoogleUser googleUser = new GoogleUser(userId, email, emailVerified, name, givenName, pictureUrl, locale);
+
+            return googleUser;
+
+        } else {
+            System.out.println("Invalid ID token.");
+        }
+        return null;
     }
 }
