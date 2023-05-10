@@ -1,6 +1,6 @@
 package com.kusitms.hotsixServer.domain.place.service;
 
-import com.kusitms.hotsixServer.domain.place.dto.PlaceDto;
+import com.kusitms.hotsixServer.domain.place.dto.Category1Response;
 import com.kusitms.hotsixServer.domain.place.entity.Category1;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
 import com.kusitms.hotsixServer.domain.place.entity.PlaceFilter;
@@ -15,60 +15,62 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.kusitms.hotsixServer.global.error.ErrorCode.SET_CATEGORY1_ERROR;
+import static com.kusitms.hotsixServer.global.error.ErrorCode.CATEGORY1_ERROR;
 @Service
 @Transactional
 @Slf4j
-public class PlaceService {
+public class PlaceCategoryService {
 
     private final PlaceRepository placeRepository;
     private final Category1Repository category1Repository;
     private final PlaceFilterRepository placeFilterRepository;
 
-    public PlaceService(PlaceRepository placeRepository, Category1Repository category1Repository, PlaceFilterRepository placeFilterRepository) {
+    public PlaceCategoryService(PlaceRepository placeRepository, Category1Repository category1Repository,
+                                PlaceFilterRepository placeFilterRepository) {
         this.placeRepository = placeRepository;
         this.category1Repository = category1Repository;
         this.placeFilterRepository = placeFilterRepository;
     }
 
-    public PlaceDto.category1Response getPlacesByCategory1Response(Long category1Id) {
+    public Category1Response getPlacesByCategory1Response(Long category1Id) {
         List<Place> places = getPlacesByCategory1(category1Id);
-        List<PlaceDto.category1Response.PlaceInfo> placeInfos = new ArrayList<>();
+        List<Category1Response.PlaceInfo> placeInfos = new ArrayList<>();
 
         for (Place place : places) {
-
-            List<String> topFilterNames = findTop2FilterNamesByPlaceId(place.getId());
-            String[] filterNamesArray = topFilterNames.toArray(new String[0]);
-
-            PlaceDto.category1Response.PlaceInfo placeInfo = PlaceDto.category1Response.PlaceInfo.builder()
-                    .id(place.getId())
-                    .name(place.getName())
-                    .starRating(place.getStarRating())
-                    .reviewCount(place.getReviewCount())
-                    .placeImg(place.getPlaceImg())
-                    .content(place.getContent())
-                    .openingHours(place.getOpeningHours())
-                    .top2Filters(filterNamesArray)
-                    .build();
-
+            Category1Response.PlaceInfo placeInfo = createPlaceInfo(place);
             placeInfos.add(placeInfo);
         }
 
-        return PlaceDto.response(placeInfos);
+        return Category1Response.builder()
+                .places(placeInfos)
+                .build();
+    }
+
+    private Category1Response.PlaceInfo createPlaceInfo(Place place) {
+        List<String> topFilterNames = findTop2FilterNamesByPlaceId(place.getId());
+        return Category1Response.PlaceInfo.builder()
+                .id(place.getId())
+                .name(place.getName())
+                .starRating(place.getStarRating())
+                .reviewCount(place.getReviewCount())
+                .placeImg(place.getPlaceImg())
+                .content(place.getContent())
+                .openingHours(place.getOpeningHours())
+                .top2Filters(topFilterNames)
+                .build();
     }
 
     public List<Place> getPlacesByCategory1(Long id) {
 
         //카테고리 id가 카테고리 범위에 있는지 확인
         Category1 category1 = category1Repository.findById(id)
-                .orElseThrow(() -> new BaseException(SET_CATEGORY1_ERROR));
+                .orElseThrow(() -> new BaseException(CATEGORY1_ERROR));
 
         return placeRepository.findByCategory1(category1);
     }
 
     private List<String> findTop2FilterNamesByPlaceId(Long placeId) {
         // 상위 필터 2개 name 찾기
-
         List<PlaceFilter> placeFilters = placeFilterRepository.findByPlaceIdOrderByCountDesc(placeId);
         List<String> topFilterNames = new ArrayList<>();
 
