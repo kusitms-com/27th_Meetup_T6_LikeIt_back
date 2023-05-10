@@ -26,6 +26,8 @@ dependencies {
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'io.lettuce:lettuce-core:6.1.5.RELEASE'
+	implementation group: 'com.google.api-client', name: 'google-api-client-jackson2', version: '1.30.10'
+
 
 	// swagger 문서화
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
@@ -34,6 +36,7 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	compileOnly 'com.google.api-client:google-api-client:1.31.2'
 	compileOnly ('org.projectlombok:lombok:1.18.20')
 
 	runtimeOnly 'com.mysql:mysql-connector-j'
