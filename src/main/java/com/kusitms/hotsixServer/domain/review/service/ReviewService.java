@@ -18,8 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.Optional;
 
 import static com.kusitms.hotsixServer.global.config.SecurityUtil.getCurrentUserEmail;
@@ -37,7 +35,6 @@ public class ReviewService {
     private final PlaceRepository placeRepository;
     private final StickerRepository stickerRepository;
     private final ReviewStickerRepository reviewStickerRepository;
-
     private final S3UploadUtil s3UploadUtil;
 
     @Transactional
@@ -66,6 +63,26 @@ public class ReviewService {
         if (optionalReview.isPresent()) {
             Review review = optionalReview.get();
             reviewRepository.delete(review);
+        }
+    }
+
+    @Transactional
+    public void likeReview(Long reviewId) {
+        Optional<Review> optionalReview = reviewRepository.findById(reviewId);
+        if (optionalReview.isPresent()) {
+            Review review = optionalReview.get();
+            int likeCount = review.getLikeCount();
+            review.setLikeCount(likeCount + 1);
+        }
+    }
+
+    @Transactional
+    public void dislikeReview(Long reviewId) {
+        Optional<Review> optionalReview = reviewRepository.findById(reviewId);
+        if (optionalReview.isPresent()) {
+            Review review = optionalReview.get();
+            int likeCount = review.getLikeCount();
+            review.setLikeCount(likeCount - 1);
         }
     }
 
