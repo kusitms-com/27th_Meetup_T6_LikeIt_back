@@ -1,6 +1,6 @@
 package com.kusitms.hotsixServer.domain.review.controller;
 
-import com.kusitms.hotsixServer.domain.review.service.S3UploadUtil;
+import com.kusitms.hotsixServer.global.config.S3UploadUtil;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;

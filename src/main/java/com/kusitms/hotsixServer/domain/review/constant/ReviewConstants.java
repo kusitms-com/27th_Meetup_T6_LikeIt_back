@@ -11,10 +11,4 @@ public class ReviewConstants {
         DELETE_REVIEW_SUCCESS("리뷰 삭제에 성공했습니다");
         private final String message;
     }
-    @Getter
-    @RequiredArgsConstructor
-    public enum EToken{
-        eRefreshToken("RT:");
-        private final String message;
-    }
 }
