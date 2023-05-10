@@ -2,10 +2,8 @@ package com.kusitms.hotsixServer.domain.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kusitms.hotsixServer.domain.user.dto.GoogleUser;
-import com.kusitms.hotsixServer.domain.user.dto.UserDto;
 import com.kusitms.hotsixServer.global.common.BaseTimeEntity;
 import lombok.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -53,6 +51,22 @@ public class User extends BaseTimeEntity {
                 .userImg(googleUser.getPicture())
                 .password(passwordEncoder.encode("google"))
                 .build();
+    }
+
+    public void updateNickName(String nickname){
+        this.nickname = nickname;
+    }
+
+    public void updatePhoneNum(String phoneNum){
+        this.phoneNum = phoneNum;
+    }
+
+    public void updateBirth(String birthDate){
+        this.birthDate = birthDate;
+    }
+
+    public void updateImg(String img){
+        this.userImg = img;
     }
 
 }
