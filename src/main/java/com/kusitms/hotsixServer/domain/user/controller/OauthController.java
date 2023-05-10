@@ -2,6 +2,8 @@ package com.kusitms.hotsixServer.domain.user.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kusitms.hotsixServer.domain.user.constant.UserConstants;
+import com.kusitms.hotsixServer.domain.user.dto.GoogleUser;
+import com.kusitms.hotsixServer.domain.user.dto.IdTokenDto;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
 import com.kusitms.hotsixServer.domain.user.service.OauthService;
 import com.kusitms.hotsixServer.global.dto.ResponseDto;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +34,15 @@ public class OauthController {
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.LOGIN_SUCCESS.getMessage(),
                 this.oauthService.getUserInfo(code)));
+
+    }
+
+    @ApiOperation("클라이언트로부터 ID_TOKEN 요청하는 API")
+    @PostMapping (value="/google/idToken")
+    public ResponseEntity<ResponseDto<GoogleUser>> signUp (@RequestBody IdTokenDto idTokenDto) throws IOException, GeneralSecurityException {
+        return ResponseEntity.ok(ResponseDto.create(
+                UserConstants.EBoardResponseMessage.LOGIN_TEST_SUCCESS.getMessage(),
+                this.oauthService.appGoogleLogin(idTokenDto)));
 
     }
 }

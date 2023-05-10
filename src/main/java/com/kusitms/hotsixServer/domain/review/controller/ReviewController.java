@@ -36,4 +36,19 @@ public class ReviewController {
                 ReviewConstants.EBoardResponseMessage.DELETE_REVIEW_SUCCESS.getMessage()));
     }
 
+    @ApiOperation("리뷰랑 같아요 클릭 처리 코드")
+    @GetMapping(value = "/like/{reviewId}")
+    public ResponseEntity<ResponseDto> likeReview(@PathVariable("reviewId") Long reviewId) {
+        reviewService.likeReview(reviewId);
+        return ResponseEntity.ok(ResponseDto.create(
+                ReviewConstants.EBoardResponseMessage.LIKE_REVIEW_SUCCESS.getMessage()));
+    }
+    @ApiOperation("리뷰랑 달라요 클릭 처리 코드")
+    @GetMapping(value = "/dislike/{reviewId}")
+    public ResponseEntity<ResponseDto> dislikeReview(@PathVariable("reviewId") Long reviewId) {
+        reviewService.dislikeReview(reviewId);
+        return ResponseEntity.ok(ResponseDto.create(
+                ReviewConstants.EBoardResponseMessage.DISLIKE_REVIEW_SUCCESS.getMessage()));
+    }
+
 }
