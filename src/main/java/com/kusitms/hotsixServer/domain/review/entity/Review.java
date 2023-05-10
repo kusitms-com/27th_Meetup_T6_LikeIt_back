@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter
+@Setter
 @Builder
 @Entity
 @Table(name = "reviews")
