@@ -3,6 +3,7 @@ package com.kusitms.hotsixServer.domain.user.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kusitms.hotsixServer.domain.user.dto.GoogleUser;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
+import com.kusitms.hotsixServer.global.common.BaseTimeEntity;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
