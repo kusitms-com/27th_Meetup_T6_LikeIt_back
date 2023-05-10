@@ -1,17 +1,25 @@
 package com.kusitms.hotsixServer.domain.user.service;
 
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
 import com.kusitms.hotsixServer.domain.user.entity.User;
 import com.kusitms.hotsixServer.domain.user.entity.UserFilter;
 import com.kusitms.hotsixServer.domain.user.repository.UserFilterRepository;
 import com.kusitms.hotsixServer.domain.user.repository.UserRepository;
+import com.kusitms.hotsixServer.global.config.S3UploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.kusitms.hotsixServer.global.config.SecurityUtil.getCurrentUserEmail;
@@ -22,6 +30,7 @@ import static com.kusitms.hotsixServer.global.config.SecurityUtil.getCurrentUser
 @Slf4j
 public class MyPageService {
 
+    private final S3UploadUtil s3UploadUtil;
 
     private final UserRepository userRepository;
 
@@ -39,4 +48,28 @@ public class MyPageService {
         return UserDto.userInfoResponse.response(user, filters);
 
     }
+
+    //회원 정보 수정
+    public void updateUserInfo(UserDto.updateInfo updateInfo, MultipartFile multipartFile){
+        User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
+
+        if(updateInfo.getNickname()!=null){
+            user.updateNickName(updateInfo.getNickname());
+        }
+
+        if(updateInfo.getPhoneNum()!=null){
+            user.updatePhoneNum(updateInfo.getPhoneNum());
+        }
+
+        if(multipartFile != null && !multipartFile.isEmpty()){
+            user.updateImg(s3UploadUtil.upload(multipartFile, "user"));
+        }
+
+        if(updateInfo.getBirthDate()!=null){
+            user.updateBirth(updateInfo.getBirthDate());
+        }
+
+        userRepository.save(user);
+    }
+
 }
