@@ -2,15 +2,12 @@ package com.kusitms.hotsixServer.domain.review.entity;
 
 import com.kusitms.hotsixServer.domain.place.entity.Place;
 import com.kusitms.hotsixServer.domain.review.dto.RequestReviewDto;
-import com.kusitms.hotsixServer.domain.user.dto.GoogleUser;
-import com.kusitms.hotsixServer.domain.user.dto.UserDto;
-import com.kusitms.hotsixServer.domain.user.entity.Filter;
 import com.kusitms.hotsixServer.domain.user.entity.User;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
@@ -33,31 +30,32 @@ public class Review {
     @JoinColumn(name = "place_id", referencedColumnName = "place_id")
     private Place place;
 
-
     @Column(name = "star_rating")
     private float starRating;
 
     @Column(name = "content")
     private String content;
 
-    @Column(name = "place_img", columnDefinition = "TEXT", nullable = false)
-    private String placeImg;
+    @Column(name = "review_img", columnDefinition = "TEXT", nullable = false)
+    private String reviewImg;
 
-    @Column(name = "like_count")
-    @ColumnDefault("0")
+    @Column(name = "like_count", columnDefinition = "int default 0")
     private int likeCount;
 
-    @Column(name = "dislike_count")
-    @ColumnDefault("0")
+    @Column(name = "dislike_count", columnDefinition = "int default 0")
     private int dislikeCount;
 
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewSticker> reviewStickers = new ArrayList<>();
+    
     @Builder
-    public static Review createReview (User user, RequestReviewDto dto) {
+    public static Review createReview (User user, Place place, String imgPath, RequestReviewDto dto) {
         return Review.builder()
                 .user(user)
+                .place(place)
                 .starRating(dto.getStarRating())
                 .content(dto.getContent())
-                .placeImg(dto.getPlaceImg())
+                .reviewImg(imgPath)
                 .build();
     }
 }
