@@ -3,33 +3,39 @@ package com.kusitms.hotsixServer.domain.place.service;
 import com.kusitms.hotsixServer.domain.place.dto.Category1Response;
 import com.kusitms.hotsixServer.domain.place.entity.Category1;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
-import com.kusitms.hotsixServer.domain.place.entity.PlaceFilter;
 import com.kusitms.hotsixServer.domain.place.repository.Category1Repository;
 import com.kusitms.hotsixServer.domain.place.repository.PlaceFilterRepository;
-import com.kusitms.hotsixServer.domain.place.repository.PlaceRepository;
+import com.kusitms.hotsixServer.domain.review.repository.ReviewRepository;
+import com.kusitms.hotsixServer.domain.user.entity.User;
+import com.kusitms.hotsixServer.domain.user.repository.UserRepository;
 import com.kusitms.hotsixServer.global.error.BaseException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.kusitms.hotsixServer.global.config.SecurityUtil.getCurrentUserEmail;
 import static com.kusitms.hotsixServer.global.error.ErrorCode.CATEGORY1_ERROR;
 @Service
 @Transactional
 @Slf4j
 public class PlaceCategoryService {
 
-    private final PlaceRepository placeRepository;
     private final Category1Repository category1Repository;
     private final PlaceFilterRepository placeFilterRepository;
+    private final UserRepository userRepository;
+    private final ReviewRepository reviewRepository;
 
-    public PlaceCategoryService(PlaceRepository placeRepository, Category1Repository category1Repository,
-                                PlaceFilterRepository placeFilterRepository) {
-        this.placeRepository = placeRepository;
+    public PlaceCategoryService(Category1Repository category1Repository, PlaceFilterRepository placeFilterRepository,
+                                UserRepository userRepository, ReviewRepository reviewRepository) {
         this.category1Repository = category1Repository;
         this.placeFilterRepository = placeFilterRepository;
+        this.userRepository = userRepository;
+        this.reviewRepository = reviewRepository;
+
     }
 
     public Category1Response getPlacesByCategory1Response(Long category1Id) {
@@ -47,7 +53,6 @@ public class PlaceCategoryService {
     }
 
     private Category1Response.PlaceInfo createPlaceInfo(Place place) {
-        List<String> topFilterNames = findTop2FilterNamesByPlaceId(place.getId());
         return Category1Response.PlaceInfo.builder()
                 .id(place.getId())
                 .name(place.getName())
@@ -56,32 +61,31 @@ public class PlaceCategoryService {
                 .placeImg(place.getPlaceImg())
                 .content(place.getContent())
                 .openingHours(place.getOpeningHours())
-                .top2Filters(topFilterNames)
+                .top2Stickers(findTop2StickersByPlace(place))
                 .build();
     }
 
     public List<Place> getPlacesByCategory1(Long id) {
 
+        User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow();
+
         //카테고리 id가 카테고리 범위에 있는지 확인
         Category1 category1 = category1Repository.findById(id)
                 .orElseThrow(() -> new BaseException(CATEGORY1_ERROR));
 
-        return placeRepository.findByCategory1(category1);
+        return placeFilterRepository.findAllByUserAndCategory1(user, category1.getId());
     }
 
-    private List<String> findTop2FilterNamesByPlaceId(Long placeId) {
-        // 상위 필터 2개 name 찾기
-        List<PlaceFilter> placeFilters = placeFilterRepository.findByPlaceIdOrderByCountDesc(placeId);
-        List<String> topFilterNames = new ArrayList<>();
+    private List<String> findTop2StickersByPlace(Place place) {
+        List<Object[]> result = reviewRepository.findTopStickersByPlace(place, PageRequest.of(0, 2));
+        List<String> topStickers = new ArrayList<>();
 
-        int count = 0;
-        for (PlaceFilter placeFilter : placeFilters) {
-            topFilterNames.add(placeFilter.getFilter().getName());
-            count++;
-            if (count == 2) {
-                break;
-            }
+        for (Object[] row : result) {
+            String stickerName = (String) row[0];
+            topStickers.add(stickerName);
         }
-        return topFilterNames;
+
+        return topStickers;
     }
+
 }
