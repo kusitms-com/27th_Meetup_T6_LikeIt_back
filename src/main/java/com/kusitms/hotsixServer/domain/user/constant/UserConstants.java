@@ -14,6 +14,8 @@ public class UserConstants {
         UPDATE_USERINFO("사용자 정보 수정에 성공했습니다."),
         SET_FILTER_SUCCESS("사용자 필터 등록에 성공했습니다."),
         GET_USERINFO_SUCCESS("사용자 정보 요청에 성공했습니다."),
+        GET_USERREVIEW_SUCCESS("사용자 리뷰 요청에 성공했습니다."),
+        UPDATE_USERFILTER_SUCCESS("사용자 필터 수정에 성공했습니다."),
         REGENERATE_TOKEN_SUCCESS("토큰 재발급에 성공했습니다.");
         private final String message;
     }

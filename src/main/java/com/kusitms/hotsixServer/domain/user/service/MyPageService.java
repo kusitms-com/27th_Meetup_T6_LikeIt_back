@@ -1,11 +1,14 @@
 package com.kusitms.hotsixServer.domain.user.service;
 
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
+import com.kusitms.hotsixServer.domain.review.entity.Review;
+import com.kusitms.hotsixServer.domain.review.repository.ReviewRepository;
+import com.kusitms.hotsixServer.domain.user.dto.FilterDto;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
+import com.kusitms.hotsixServer.domain.user.entity.Filter;
 import com.kusitms.hotsixServer.domain.user.entity.User;
 import com.kusitms.hotsixServer.domain.user.entity.UserFilter;
+import com.kusitms.hotsixServer.domain.user.repository.FilterRepository;
 import com.kusitms.hotsixServer.domain.user.repository.UserFilterRepository;
 import com.kusitms.hotsixServer.domain.user.repository.UserRepository;
 import com.kusitms.hotsixServer.global.config.S3UploadUtil;
@@ -15,11 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.kusitms.hotsixServer.global.config.SecurityUtil.getCurrentUserEmail;
@@ -35,6 +35,10 @@ public class MyPageService {
     private final UserRepository userRepository;
 
     private final UserFilterRepository userFilterRepository;
+
+    private final ReviewRepository reviewRepository;
+
+    private final FilterRepository filterRepository;
 
     //회원 정보 조회
     public UserDto.userInfoResponse getUserInfo(){
@@ -72,4 +76,33 @@ public class MyPageService {
         userRepository.save(user);
     }
 
+    public List<ReviewDto.myReviewResponse> getReviews(){
+        User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
+
+        List<Review> reviewList = reviewRepository.findMyReview(user);
+        List<ReviewDto.myReviewResponse> myReviewResponses = new ArrayList<>();
+
+        for(Review review : reviewList){
+            ReviewDto.myReviewResponse myReviewResponse = ReviewDto.myReviewResponse.response(
+                    review.getPlace().getName(),user.getNickname(),review.getStarRating(),review.getContent()
+            ,review.getLikeCount(), review.getDislikeCount(), review.getReviewImg());
+
+            myReviewResponses.add(myReviewResponse);
+        }
+
+        return myReviewResponses;
+
+    }
+
+    public void updateFilters(FilterDto dto){
+        User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
+
+        userFilterRepository.deleteAllByUser(user);
+        for(int i=0; i<dto.getFilters().length; i++){
+            Filter getFilter = filterRepository.findByName(dto.getFilters()[i]).orElseThrow();
+            UserFilter userFilter = new UserFilter(getFilter, user);
+            userFilterRepository.save(userFilter);
+        }
+
+    }
 }

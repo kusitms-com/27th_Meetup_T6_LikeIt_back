@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SetFilterDto {
+public class FilterDto {
    private String[] filters;
 }

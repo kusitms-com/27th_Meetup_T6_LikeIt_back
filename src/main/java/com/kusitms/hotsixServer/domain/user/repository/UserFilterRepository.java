@@ -14,4 +14,6 @@ public interface UserFilterRepository extends JpaRepository<UserFilter, Long> {
     List<UserFilter> findAllByUserFetchFilter(@Param("user") User user);
 
     List<UserFilter> findAllByUser(User user);
+
+    void deleteAllByUser(User user);
 }
