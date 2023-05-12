@@ -27,7 +27,4 @@ public class PlaceFilter {
     @JoinColumn(name="place_id")
     private Place place;
 
-    @Column(name = "count", columnDefinition = "int default 1")
-    private int count;
-
 }

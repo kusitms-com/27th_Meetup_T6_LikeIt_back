@@ -19,12 +19,6 @@ public class Category1Response {
         private String placeImg;
         private String content;
         private String openingHours;
-        private List<String> top2Filters;
-    }
-
-    public static Category1Response response(List<PlaceInfo> places) {
-        return Category1Response.builder()
-                .places(places)
-                .build();
+        private List<String> top2Stickers;
     }
 }
