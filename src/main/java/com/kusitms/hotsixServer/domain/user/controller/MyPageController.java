@@ -1,6 +1,8 @@
 package com.kusitms.hotsixServer.domain.user.controller;
 
+import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
 import com.kusitms.hotsixServer.domain.user.constant.UserConstants;
+import com.kusitms.hotsixServer.domain.user.dto.FilterDto;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
 import com.kusitms.hotsixServer.domain.user.entity.User;
 import com.kusitms.hotsixServer.domain.user.service.MyPageService;
@@ -13,6 +15,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("mypage")
@@ -37,4 +41,21 @@ public class MyPageController {
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.UPDATE_USERINFO.getMessage()));
     }
+
+    @ApiOperation("취향 카테고리 수정")
+    @PatchMapping("/filter")
+    public ResponseEntity<ResponseDto> patchf(@RequestBody FilterDto filterDto){
+        this.myPageService.updateFilters(filterDto);
+        return ResponseEntity.ok(ResponseDto.create(
+                UserConstants.EBoardResponseMessage.UPDATE_USERFILTER_SUCCESS.getMessage()));
+    }
+
+    @ApiOperation("내 리뷰 반환")
+    @GetMapping("/review")
+    public ResponseEntity<ResponseDto<List<ReviewDto.myReviewResponse>>> getReview(){
+        return ResponseEntity.ok(ResponseDto.create(
+                UserConstants.EBoardResponseMessage.GET_USERREVIEW_SUCCESS.getMessage(),
+                this.myPageService.getReviews()));
+    }
+
 }

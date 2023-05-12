@@ -1,6 +1,6 @@
 package com.kusitms.hotsixServer.domain.user.service;
 
-import com.kusitms.hotsixServer.domain.user.dto.SetFilterDto;
+import com.kusitms.hotsixServer.domain.user.dto.FilterDto;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
 import com.kusitms.hotsixServer.domain.user.entity.Filter;
 import com.kusitms.hotsixServer.domain.user.entity.User;
@@ -53,7 +53,7 @@ public class UserService {
 
     //취향 카테고리 선택
     @Transactional
-    public void setFilter(SetFilterDto dto){
+    public void setFilter(FilterDto dto){
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow();
 
         if(dto.getFilters().length>2) throw new BaseException(SET_FILTER_ERROR);

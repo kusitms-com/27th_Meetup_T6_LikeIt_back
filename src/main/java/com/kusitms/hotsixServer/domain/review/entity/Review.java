@@ -3,6 +3,7 @@ package com.kusitms.hotsixServer.domain.review.entity;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
 import com.kusitms.hotsixServer.domain.review.dto.RequestReviewDto;
 import com.kusitms.hotsixServer.domain.user.entity.User;
+import com.kusitms.hotsixServer.global.common.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "reviews")
-public class Review {
+public class Review extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +48,7 @@ public class Review {
     private int dislikeCount;
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<ReviewSticker> reviewStickers = new ArrayList<>();
     
     @Builder
