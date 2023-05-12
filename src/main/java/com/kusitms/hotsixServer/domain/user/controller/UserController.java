@@ -1,7 +1,7 @@
 package com.kusitms.hotsixServer.domain.user.controller;
 
 import com.kusitms.hotsixServer.domain.user.constant.UserConstants;
-import com.kusitms.hotsixServer.domain.user.dto.SetFilterDto;
+import com.kusitms.hotsixServer.domain.user.dto.FilterDto;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
 import com.kusitms.hotsixServer.domain.user.service.UserService;
 import com.kusitms.hotsixServer.global.dto.ResponseDto;
@@ -30,8 +30,8 @@ public class UserController {
 
     //취향 카테고리 선택
     @PostMapping("/setFilters")
-    public ResponseEntity<ResponseDto> setFilter(@RequestBody SetFilterDto setFilterDto){
-        this.userService.setFilter(setFilterDto);
+    public ResponseEntity<ResponseDto> setFilter(@RequestBody FilterDto filterDto){
+        this.userService.setFilter(filterDto);
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.SET_FILTER_SUCCESS.getMessage()));
     }

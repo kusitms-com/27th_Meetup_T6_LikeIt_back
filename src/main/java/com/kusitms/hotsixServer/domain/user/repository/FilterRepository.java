@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface FilterRepository extends JpaRepository<Filter, Long> {
     Optional<Filter> findByName(String name);
+
 }
