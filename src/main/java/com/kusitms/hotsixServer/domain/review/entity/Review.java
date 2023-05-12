@@ -48,6 +48,7 @@ public class Review extends BaseTimeEntity {
     private int dislikeCount;
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<ReviewSticker> reviewStickers = new ArrayList<>();
     
     @Builder
