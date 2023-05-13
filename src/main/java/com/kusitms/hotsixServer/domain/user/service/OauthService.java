@@ -13,6 +13,7 @@ import com.kusitms.hotsixServer.domain.user.entity.User;
 import com.kusitms.hotsixServer.domain.user.repository.UserRepository;
 import com.kusitms.hotsixServer.global.config.jwt.RedisDao;
 import com.kusitms.hotsixServer.global.config.jwt.TokenProvider;
+import com.kusitms.hotsixServer.global.error.BaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +36,9 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.Duration;
 import java.util.Collections;
+
+import static com.kusitms.hotsixServer.global.error.ErrorCode.INVALID_TOKEN_ERROR;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Service
 @Slf4j
@@ -146,8 +150,7 @@ public class OauthService {
 
             return checkUserInDB(googleUser);
         } else {
-            System.out.println("Invalid ID token.");
+            throw new BaseException(INVALID_TOKEN_ERROR);
         }
-        return null;
     }
 }

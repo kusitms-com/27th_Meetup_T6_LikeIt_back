@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
     Token_Error(HttpStatus.BAD_REQUEST,400, "토큰값 다시 보내주세요."),
+    INVALID_TOKEN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,500, "유효하지 않은 토큰값입니다."),
     SET_FILTER_ERROR(HttpStatus.BAD_REQUEST,400, "필터값 2개 이하로 보내주세요."),
     CATEGORY1_ERROR(HttpStatus.BAD_REQUEST,400, "존재하지 않는 카테고리값입니다."),
     PLACE_ERROR(HttpStatus.BAD_REQUEST,400, "존재하지 않는 장소값입니다."),
