@@ -24,6 +24,8 @@ public class PlaceDetail {
         private int reviewCount;
         private String[] top2PositiveStickers;
         private String[] top2NegativeStickers;
+        private int[] top2PositiveStickerCount;
+        private int[] top2NegativeStickerCount;
         private List<ReviewDto> reviews;
     }
 

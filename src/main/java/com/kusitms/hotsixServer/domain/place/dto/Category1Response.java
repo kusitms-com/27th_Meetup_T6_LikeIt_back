@@ -19,6 +19,6 @@ public class Category1Response {
         private String placeImg;
         private String content;
         private String openingHours;
-        private List<String> top2Stickers;
+        private String[] top2Stickers;
     }
 }

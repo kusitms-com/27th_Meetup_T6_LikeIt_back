@@ -13,7 +13,7 @@ public class ReviewDto {
     private String content;
     private int likeCount;
     private int dislikeCount;
-    private String[] Stickers;
+    private String[] stickers;
 
     @Data
     @Builder

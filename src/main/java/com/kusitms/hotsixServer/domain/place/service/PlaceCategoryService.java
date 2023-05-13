@@ -76,13 +76,14 @@ public class PlaceCategoryService {
         return placeFilterRepository.findAllByUserAndCategory1(user, category1.getId());
     }
 
-    private List<String> findTop2StickersByPlace(Place place) {
+    private String[] findTop2StickersByPlace(Place place) {
         List<Object[]> result = reviewRepository.findTopStickersByPlace(place, PageRequest.of(0, 2));
-        List<String> topStickers = new ArrayList<>();
+        String[] topStickers = new String[result.size()];
 
-        for (Object[] row : result) {
+        for (int i = 0; i < result.size(); i++) {
+            Object[] row = result.get(i);
             String stickerName = (String) row[0];
-            topStickers.add(stickerName);
+            topStickers[i] = stickerName;
         }
 
         return topStickers;
