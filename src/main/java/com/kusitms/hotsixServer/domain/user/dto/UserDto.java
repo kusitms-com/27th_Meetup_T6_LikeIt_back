@@ -30,12 +30,14 @@ public class UserDto implements Serializable {
     @Builder
     public static class socialLoginResponse {
         private final Long id;
+        private final boolean isSignUp;
         private final String atk;
         private final String rtk;
 
-        public static socialLoginResponse response(Long id,  String atk, String rtk) {
+        public static socialLoginResponse response(Long id, boolean isSignUp, String atk, String rtk) {
             return socialLoginResponse.builder()
                     .id(id)
+                    .isSignUp(isSignUp)
                     .atk(atk)
                     .rtk(rtk)
                     .build();

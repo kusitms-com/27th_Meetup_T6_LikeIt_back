@@ -55,7 +55,7 @@ public class OauthService {
 
     private final RedisDao redisDao;
 
-    @Value("${app.google.android.client.id}")
+    @Value("${app.google.client.id}")
     private String GOOGLE_SNS_CLIENT_ID;
 
     public UserDto.socialLoginResponse getUserInfo(String code) throws JsonProcessingException {
@@ -82,16 +82,18 @@ public class OauthService {
 
             User newUser = User.createUser(googleUser, passwordEncoder);
             Long id = userRepository.save(newUser).getId();
-            return oauthLogin(newUser.getUserEmail(), id);
+            boolean isSignUp = true;
+            return oauthLogin(isSignUp, newUser.getUserEmail(), id);
 
         } else {  // 로그인
             User user = userRepository.findByUserEmail(googleUser.getEmail()).orElseThrow();
-            return oauthLogin(user.getUserEmail(), user.getId());
+            boolean isSignUp = false;
+            return oauthLogin(isSignUp, user.getUserEmail(), user.getId());
         }
 
     }
 
-    public UserDto.socialLoginResponse oauthLogin(String email, Long id) {
+    public UserDto.socialLoginResponse oauthLogin(boolean isSignUp, String email, Long id) {
 
         // (1) authentication 객체 생성 후 SecurityContext에 등록
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, "google");
@@ -107,7 +109,7 @@ public class OauthService {
         httpHeaders.add("Authorization", "Bearer " + atk);
 
         return UserDto.socialLoginResponse.response(
-                id, atk, rtk
+                id, isSignUp, atk, rtk
         );
     }
 
@@ -118,7 +120,7 @@ public class OauthService {
     }
 
     @Transactional
-    public GoogleUser appGoogleLogin(IdTokenDto idTokenDto) throws GeneralSecurityException, IOException {
+    public UserDto.socialLoginResponse appGoogleLogin(IdTokenDto idTokenDto) throws GeneralSecurityException, IOException {
         HttpTransport transport = new NetHttpTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 
@@ -126,13 +128,13 @@ public class OauthService {
                 .setAudience(Collections.singletonList(GOOGLE_SNS_CLIENT_ID))
                 .build();
 
+        //토큰 검증
         GoogleIdToken idToken = verifier.verify(idTokenDto.getIdToken());
+
         if (idToken != null) {
             Payload payload = idToken.getPayload();
 
             String userId = payload.getSubject();
-            System.out.println("User ID: " + userId);
-
             String email = payload.getEmail();
             boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
             String name = (String) payload.get("name");
@@ -143,8 +145,7 @@ public class OauthService {
 
             GoogleUser googleUser = new GoogleUser(userId, email, emailVerified, name, givenName, pictureUrl, locale);
 
-            return googleUser;
-
+            return checkUserInDB(googleUser);
         } else {
             System.out.println("Invalid ID token.");
         }
