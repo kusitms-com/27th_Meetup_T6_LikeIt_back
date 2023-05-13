@@ -128,7 +128,6 @@ public class OauthService {
                 .setAudience(Collections.singletonList(GOOGLE_SNS_CLIENT_ID))
                 .build();
 
-        //토큰 검증
         GoogleIdToken idToken = verifier.verify(idTokenDto.getIdToken());
 
         if (idToken != null) {
