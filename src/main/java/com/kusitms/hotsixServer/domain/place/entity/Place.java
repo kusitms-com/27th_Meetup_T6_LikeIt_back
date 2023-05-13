@@ -1,5 +1,6 @@
 package com.kusitms.hotsixServer.domain.place.entity;
 
+import com.kusitms.hotsixServer.global.common.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "places")
-public class Place {
+public class Place extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "place_id")
