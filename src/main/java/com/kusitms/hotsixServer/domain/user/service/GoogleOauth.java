@@ -27,11 +27,17 @@ public class GoogleOauth {
     @Value("${app.google.client.id}")
     private String GOOGLE_SNS_CLIENT_ID;
 
+    @Value("${app.google.test.client.id}")
+    private String GOOGLE_SNS_TEST_CLIENT_ID;
+
     @Value("${app.google.callback.url}")
     private String GOOGLE_SNS_CALLBACK_URL;
 
     @Value("${app.google.client.secret}")
     private String GOOGLE_SNS_CLIENT_SECRET;
+
+    @Value("${app.google.test.client.secret}")
+    private String GOOGLE_SNS_TEST_CLIENT_SECRET;
 
     @Value("${app.google.token.url}")
     private String GOOGLE_SNS_TOKEN_BASE_URL;
@@ -47,8 +53,8 @@ public class GoogleOauth {
 
         Map<String, Object> params = new HashMap<>();
         params.put("code", code);
-        params.put("client_id", GOOGLE_SNS_CLIENT_ID);
-        params.put("client_secret", GOOGLE_SNS_CLIENT_SECRET);
+        params.put("client_id", GOOGLE_SNS_TEST_CLIENT_ID);
+        params.put("client_secret", GOOGLE_SNS_TEST_CLIENT_SECRET);
         params.put("redirect_uri", GOOGLE_SNS_CALLBACK_URL);
         params.put("grant_type", "authorization_code");
 
@@ -86,7 +92,7 @@ public class GoogleOauth {
     }
 
     public String getOauthRedirectURL() {
-        String reqUrl = GOOGLE_LOGIN_URL + "?client_id=" + GOOGLE_SNS_CLIENT_ID + "&redirect_uri=" + GOOGLE_SNS_CALLBACK_URL
+        String reqUrl = GOOGLE_LOGIN_URL + "?client_id=" + GOOGLE_SNS_TEST_CLIENT_ID + "&redirect_uri=" + GOOGLE_SNS_CALLBACK_URL
                 + "&response_type=code&scope=email%20profile%20openid&access_type=offline";
         return reqUrl;
     }
