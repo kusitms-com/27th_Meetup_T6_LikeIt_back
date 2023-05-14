@@ -2,6 +2,7 @@ package com.kusitms.hotsixServer.domain.user.service;
 
 import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
 import com.kusitms.hotsixServer.domain.review.entity.Review;
+import com.kusitms.hotsixServer.domain.review.entity.ReviewSticker;
 import com.kusitms.hotsixServer.domain.review.repository.ReviewRepository;
 import com.kusitms.hotsixServer.domain.user.dto.FilterDto;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
@@ -85,13 +86,26 @@ public class MyPageService {
         for(Review review : reviewList){
             ReviewDto.myReviewResponse myReviewResponse = ReviewDto.myReviewResponse.response(
                     review.getPlace().getName(),user.getNickname(),review.getStarRating(),review.getContent()
-            ,review.getLikeCount(), review.getDislikeCount(), review.getReviewImg());
+            ,review.getLikeCount(), review.getDislikeCount(), getStickerNames(review), review.getReviewImg());
 
             myReviewResponses.add(myReviewResponse);
         }
 
         return myReviewResponses;
 
+    }
+
+    public String[] getStickerNames(Review review) {
+        List<ReviewSticker> reviewStickers = review.getReviewStickers();
+        String[] stickerNames = new String[reviewStickers.size()];
+
+        for (int i = 0; i < reviewStickers.size(); i++) {
+            ReviewSticker reviewSticker = reviewStickers.get(i);
+            String stickerName = reviewSticker.getSticker().getName();
+            stickerNames[i] = stickerName;
+        }
+
+        return stickerNames;
     }
 
     public void updateFilters(FilterDto dto){

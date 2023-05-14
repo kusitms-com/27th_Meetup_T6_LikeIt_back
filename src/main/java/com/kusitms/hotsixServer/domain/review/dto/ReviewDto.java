@@ -24,11 +24,12 @@ public class ReviewDto {
         private String content;
         private int likeCount;
         private int dislikeCount;
+        private String[] stickers;
         private String img;
 
         public static myReviewResponse response(
                 String placeName,String nickname,float starRating,String content,
-                int likeCount,int dislikeCount,String img) {
+                int likeCount,int dislikeCount, String[] stickers, String img) {
             return myReviewResponse.builder()
                     .placeName(placeName)
                     .nickname(nickname)
@@ -36,6 +37,7 @@ public class ReviewDto {
                     .content(content)
                     .likeCount(likeCount)
                     .dislikeCount(dislikeCount)
+                    .stickers(stickers)
                     .img(img).build();
         }
 
