@@ -1,8 +1,10 @@
 package com.kusitms.hotsixServer.domain.place.service;
 
 import com.kusitms.hotsixServer.domain.place.dto.Category1Response;
+import com.kusitms.hotsixServer.domain.place.entity.Bookmark;
 import com.kusitms.hotsixServer.domain.place.entity.Category1;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
+import com.kusitms.hotsixServer.domain.place.repository.BookmarkRepository;
 import com.kusitms.hotsixServer.domain.place.repository.Category1Repository;
 import com.kusitms.hotsixServer.domain.place.repository.PlaceFilterRepository;
 import com.kusitms.hotsixServer.domain.review.repository.ReviewRepository;
@@ -28,22 +30,25 @@ public class PlaceCategoryService {
     private final PlaceFilterRepository placeFilterRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     public PlaceCategoryService(Category1Repository category1Repository, PlaceFilterRepository placeFilterRepository,
-                                UserRepository userRepository, ReviewRepository reviewRepository) {
+                                UserRepository userRepository, ReviewRepository reviewRepository, BookmarkRepository bookmarkRepository) {
         this.category1Repository = category1Repository;
         this.placeFilterRepository = placeFilterRepository;
         this.userRepository = userRepository;
         this.reviewRepository = reviewRepository;
+        this.bookmarkRepository = bookmarkRepository;
 
     }
 
     public Category1Response getPlacesByCategory1Response(Long category1Id) {
         List<Place> places = getPlacesByCategory1(category1Id);
         List<Category1Response.PlaceInfo> placeInfos = new ArrayList<>();
+        User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow();
 
         for (Place place : places) {
-            Category1Response.PlaceInfo placeInfo = createPlaceInfo(place);
+            Category1Response.PlaceInfo placeInfo = createPlaceInfo(place, user);
             placeInfos.add(placeInfo);
         }
 
@@ -52,7 +57,7 @@ public class PlaceCategoryService {
                 .build();
     }
 
-    private Category1Response.PlaceInfo createPlaceInfo(Place place) {
+    private Category1Response.PlaceInfo createPlaceInfo(Place place, User user) {
         return Category1Response.PlaceInfo.builder()
                 .id(place.getId())
                 .name(place.getName())
@@ -62,6 +67,7 @@ public class PlaceCategoryService {
                 .content(place.getContent())
                 .openingHours(place.getOpeningHours())
                 .top2Stickers(findTop2StickersByPlace(place))
+                .isBookmarked(checkBookmark(user, place))
                 .build();
     }
 
@@ -87,6 +93,14 @@ public class PlaceCategoryService {
         }
 
         return topStickers;
+    }
+    public char checkBookmark(User user, Place place){
+        Bookmark bookmark = bookmarkRepository.findByUserAndPlace(user, place);
+        if (bookmark == null) {
+            return 'N';
+        } else {
+            return 'Y';
+        }
     }
 
 }

@@ -20,5 +20,6 @@ public class Category1Response {
         private String content;
         private String openingHours;
         private String[] top2Stickers;
+        private char isBookmarked;
     }
 }

@@ -16,6 +16,10 @@ public class Category2 {
     @Column(name = "category2_id")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="category1_id")
+    private Category1 category1;
+
     @Column(name = "name", nullable = false)
     private String name;
 }

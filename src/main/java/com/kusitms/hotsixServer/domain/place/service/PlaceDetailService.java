@@ -1,13 +1,17 @@
 package com.kusitms.hotsixServer.domain.place.service;
 
 import com.kusitms.hotsixServer.domain.place.dto.PlaceDetail;
+import com.kusitms.hotsixServer.domain.place.entity.Bookmark;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
+import com.kusitms.hotsixServer.domain.place.repository.BookmarkRepository;
 import com.kusitms.hotsixServer.domain.place.repository.PlaceRepository;
 import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
 import com.kusitms.hotsixServer.domain.review.entity.Review;
 import com.kusitms.hotsixServer.domain.review.entity.ReviewSticker;
 import com.kusitms.hotsixServer.domain.review.repository.ReviewRepository;
 import com.kusitms.hotsixServer.domain.review.repository.ReviewStickerRepository;
+import com.kusitms.hotsixServer.domain.user.entity.User;
+import com.kusitms.hotsixServer.domain.user.repository.UserRepository;
 import com.kusitms.hotsixServer.global.error.BaseException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.kusitms.hotsixServer.global.config.SecurityUtil.getCurrentUserEmail;
 import static com.kusitms.hotsixServer.global.error.ErrorCode.PLACE_ERROR;
 
 @Service
@@ -25,14 +30,20 @@ public class PlaceDetailService {
     private final PlaceRepository placeRepository;
     private final ReviewRepository reviewRepository;
     private final ReviewStickerRepository reviewStickerRepository;
+    private final UserRepository userRepository;
+    private final BookmarkRepository bookmarkRepository;
 
-    public PlaceDetailService(PlaceRepository placeRepository, ReviewRepository reviewRepository, ReviewStickerRepository reviewStickerRepository) {
+    public PlaceDetailService(PlaceRepository placeRepository, ReviewRepository reviewRepository, ReviewStickerRepository reviewStickerRepository,
+                              UserRepository userRepository, BookmarkRepository bookmarkRepository) {
         this.placeRepository = placeRepository;
         this.reviewRepository = reviewRepository;
         this.reviewStickerRepository = reviewStickerRepository;
+        this.userRepository = userRepository;
+        this.bookmarkRepository = bookmarkRepository;
         }
 
     public PlaceDetail getPlaceDetail(Long placeId) {
+        User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow();
         Place place = placeRepository.findById(placeId).orElseThrow();
         List<Review> reviews = reviewRepository.findByPlaceId(placeId);
 
@@ -70,6 +81,7 @@ public class PlaceDetailService {
                 .top2NegativeStickers(top2NegativeStickers)
                 .top2PositiveStickerCount(top2PositiveStickerCount)
                 .top2NegativeStickerCount(top2NegativeStickerCount)
+                .isBookmarked(checkBookmark(user, place))
                 .reviews(reviewInfos)
                 .build();
 
@@ -131,6 +143,15 @@ public class PlaceDetailService {
         }
 
         return stickerCounts;
+    }
+
+    public char checkBookmark(User user, Place place){
+        Bookmark bookmark = bookmarkRepository.findByUserAndPlace(user, place);
+        if (bookmark == null) {
+            return 'N';
+        } else {
+            return 'Y';
+        }
     }
 
 }
