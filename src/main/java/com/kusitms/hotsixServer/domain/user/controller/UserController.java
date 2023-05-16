@@ -1,5 +1,6 @@
 package com.kusitms.hotsixServer.domain.user.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kusitms.hotsixServer.domain.user.constant.UserConstants;
 import com.kusitms.hotsixServer.domain.user.dto.FilterDto;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;

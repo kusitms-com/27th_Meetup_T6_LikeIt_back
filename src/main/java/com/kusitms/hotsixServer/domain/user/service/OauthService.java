@@ -1,11 +1,9 @@
 package com.kusitms.hotsixServer.domain.user.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.kusitms.hotsixServer.domain.user.dto.GoogleOauthToken;
 import com.kusitms.hotsixServer.domain.user.dto.GoogleUser;
 import com.kusitms.hotsixServer.domain.user.dto.IdTokenDto;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
@@ -18,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -31,14 +28,12 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.Duration;
 import java.util.Collections;
 
 import static com.kusitms.hotsixServer.global.error.ErrorCode.INVALID_TOKEN_ERROR;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Service
 @Slf4j
@@ -47,11 +42,7 @@ public class OauthService {
 
     private final TokenProvider tokenProvider;
 
-    private final HttpServletResponse response;
-
     private final PasswordEncoder passwordEncoder;
-
-    private final GoogleOauth googleOauth;
 
     private final UserRepository userRepository;
 
@@ -61,23 +52,6 @@ public class OauthService {
 
     @Value("${app.google.client.id}")
     private String GOOGLE_SNS_CLIENT_ID;
-
-    public UserDto.socialLoginResponse getUserInfo(String code) throws JsonProcessingException {
-
-        //구글로 일회성 코드를 보내 액세스 토큰이 담긴 응답객체를 받아옴
-        ResponseEntity<String> accessTokenResponse = googleOauth.requestAccessToekn(code);
-
-        //응답 객체가 JSON형식으로 되어 있으므로, 이를 deserialization해서 자바 객체에 담을 것이다.
-        GoogleOauthToken oAuthToken = googleOauth.getAccessToken(accessTokenResponse);
-
-        //액세스 토큰을 다시 구글로 보내 구글에 저장된 사용자 정보가 담긴 응답 객체를 받아온다.
-        ResponseEntity<String> userInfoResponse = googleOauth.requestUserInfo(oAuthToken);
-
-        //다시 JSON 형식의 응답 객체를 자바 객체로 역직렬화한다.
-        GoogleUser googleUser = googleOauth.getUserInfo(userInfoResponse);
-
-        return checkUserInDB(googleUser);
-    }
 
     public UserDto.socialLoginResponse checkUserInDB(GoogleUser googleUser) {
 
@@ -115,12 +89,6 @@ public class OauthService {
         return UserDto.socialLoginResponse.response(
                 id, isSignUp, atk, rtk
         );
-    }
-
-    public void request(String socialLoginType) throws IOException {
-        String redirectURL = googleOauth.getOauthRedirectURL();
-
-        response.sendRedirect(redirectURL);
     }
 
     @Transactional
