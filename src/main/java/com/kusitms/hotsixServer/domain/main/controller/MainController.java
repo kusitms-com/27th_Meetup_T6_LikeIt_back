@@ -5,6 +5,7 @@ import com.kusitms.hotsixServer.domain.main.dto.PlaceByCategoryDto;
 import com.kusitms.hotsixServer.domain.main.service.MainService;
 import com.kusitms.hotsixServer.domain.user.constant.UserConstants;
 import com.kusitms.hotsixServer.global.dto.ResponseDto;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ public class MainController {
 
     private final MainService mainService;
 
+    @ApiOperation("메인 취향필터별 장소 추천")
     @GetMapping(value="/places/filter")
     public ResponseEntity<ResponseDto<List<PlaceByCategoryDto>>> getPlacesByFilters(){
         return ResponseEntity.ok(ResponseDto.create(

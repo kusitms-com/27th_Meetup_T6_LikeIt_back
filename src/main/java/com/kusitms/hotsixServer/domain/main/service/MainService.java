@@ -6,7 +6,6 @@ import com.kusitms.hotsixServer.domain.place.entity.Place;
 import com.kusitms.hotsixServer.domain.place.repository.PlaceRepository;
 import com.kusitms.hotsixServer.domain.review.repository.StickerRepository;
 import com.kusitms.hotsixServer.domain.user.entity.User;
-import com.kusitms.hotsixServer.domain.user.repository.UserFilterRepository;
 import com.kusitms.hotsixServer.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static com.kusitms.hotsixServer.global.config.SecurityUtil.getCurrentUserEmail;
 
@@ -27,7 +25,6 @@ public class MainService {
 
     private final PlaceRepository placeRepository;
     private final UserRepository userRepository;
-    private final UserFilterRepository userFilterRepository;
     private final StickerRepository stickerRepository;
 
     public List<PlaceByCategoryDto> getPlacesByFilters(){
