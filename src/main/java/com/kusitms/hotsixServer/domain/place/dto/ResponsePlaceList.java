@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 @Data
 @Builder
-public class Category1Response {
+public class ResponsePlaceList {
     private List<PlaceInfo> places;
 
     @Data
