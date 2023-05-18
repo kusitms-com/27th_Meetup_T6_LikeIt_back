@@ -1,9 +1,9 @@
 package com.kusitms.hotsixServer.domain.main.controller;
 
 import com.kusitms.hotsixServer.domain.main.constant.MainConstants;
+import com.kusitms.hotsixServer.domain.main.dto.PlaceByBookmarkCntCto;
 import com.kusitms.hotsixServer.domain.main.dto.PlaceByCategoryDto;
 import com.kusitms.hotsixServer.domain.main.service.MainService;
-import com.kusitms.hotsixServer.domain.user.constant.UserConstants;
 import com.kusitms.hotsixServer.global.dto.ResponseDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +27,13 @@ public class MainController {
         return ResponseEntity.ok(ResponseDto.create(
                 MainConstants.EBoardResponseMessage.PLACES_RESPONSE_SUCCESS.getMessage(),
             this.mainService.getPlacesByFilters()));
+    }
 
+    @ApiOperation("Top2 가져오기")
+    @GetMapping(value="/places/bookmark")
+    public ResponseEntity<ResponseDto<PlaceByBookmarkCntCto>> getPlacesByBookmarkCnt(){
+        return ResponseEntity.ok(ResponseDto.create(
+                MainConstants.EBoardResponseMessage.PLACES_RESPONSE_SUCCESS.getMessage(),
+                this.mainService.getTopBookmarks()));
     }
 }
