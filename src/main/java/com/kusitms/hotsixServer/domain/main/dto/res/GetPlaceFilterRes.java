@@ -1,4 +1,4 @@
-package com.kusitms.hotsixServer.domain.main.dto;
+package com.kusitms.hotsixServer.domain.main.dto.res;
 
 
 import lombok.AllArgsConstructor;
@@ -10,10 +10,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class PlaceByCategoryDto {
+public class GetPlaceFilterRes {
     private Long id;
     private String name;
     private String img;
     private float rating;
-    private List<StickerDto> stickers;
+    private List<GetStickerRes> stickers;
 }
