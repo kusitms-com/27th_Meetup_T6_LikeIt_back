@@ -2,17 +2,15 @@ package com.kusitms.hotsixServer.domain.place.controller;
 
 
 import com.kusitms.hotsixServer.domain.place.constant.PlaceConstants;
-import com.kusitms.hotsixServer.domain.place.dto.Category1Response;
+import com.kusitms.hotsixServer.domain.place.dto.ResponsePlaceList;
 import com.kusitms.hotsixServer.domain.place.dto.PlaceDetail;
+import com.kusitms.hotsixServer.domain.place.dto.RequestPlaceDto;
 import com.kusitms.hotsixServer.domain.place.service.PlaceCategoryService;
 import com.kusitms.hotsixServer.domain.place.service.PlaceDetailService;
 import com.kusitms.hotsixServer.global.dto.ResponseDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/place")
@@ -27,13 +25,33 @@ public class PlaceController {
         this.placeDetailService = placeDetailService;
     }
 
-    @ApiOperation("카테고리1(음식점, 카페, 놀거리) 선택시 장소 출력 코드")
-    @GetMapping("/list/{category1Id}")
-    public ResponseEntity<ResponseDto<Category1Response>> getPlacesByCategory1(@PathVariable("category1Id") Long category1Id) {
-        Category1Response placeResponse = placeCategoryService.getPlacesByCategory1Response(category1Id);
+    @ApiOperation("음식점 선택시 메인 화면")
+    @PostMapping("/list/restaurant")
+    public ResponseEntity<ResponseDto<ResponsePlaceList>> getPlacesByRestaurant(@RequestBody RequestPlaceDto dto) {
+        ResponsePlaceList placeResponse = placeCategoryService.getPlacesByCategory1Response(1L, dto);
 
         return ResponseEntity.ok(ResponseDto.create(
-                PlaceConstants.EBoardResponseMessage.RESPONSE_PLACE_CATEGORY1_SUCCESS.getMessage(),
+                PlaceConstants.EBoardResponseMessage.RESPONSE_PLACE_RESTAURANT_SUCCESS.getMessage(),
+                placeResponse));
+    }
+
+    @ApiOperation("카페 선택시 메인 화면")
+    @PostMapping("/list/cafe")
+    public ResponseEntity<ResponseDto<ResponsePlaceList>> getPlacesByCafe(@RequestBody RequestPlaceDto dto) {
+        ResponsePlaceList placeResponse = placeCategoryService.getPlacesByCategory1Response(2L, dto);
+
+        return ResponseEntity.ok(ResponseDto.create(
+                PlaceConstants.EBoardResponseMessage.RESPONSE_PLACE_CAFE_SUCCESS.getMessage(),
+                placeResponse));
+    }
+
+    @ApiOperation("놀거리 선택시 메인 화면")
+    @PostMapping("/list/activity")
+    public ResponseEntity<ResponseDto<ResponsePlaceList>> getPlacesByActivity(@RequestBody RequestPlaceDto dto) {
+        ResponsePlaceList placeResponse = placeCategoryService.getPlacesByCategory1Response(3L, dto);
+
+        return ResponseEntity.ok(ResponseDto.create(
+                PlaceConstants.EBoardResponseMessage.RESPONSE_PLACE_ACTIVITY_SUCCESS.getMessage(),
                 placeResponse));
     }
 

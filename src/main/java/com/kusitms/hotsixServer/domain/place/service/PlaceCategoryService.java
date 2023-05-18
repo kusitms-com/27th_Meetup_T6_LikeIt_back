@@ -1,16 +1,18 @@
 package com.kusitms.hotsixServer.domain.place.service;
 
-import com.kusitms.hotsixServer.domain.place.dto.Category1Response;
+import com.kusitms.hotsixServer.domain.place.dto.ResponsePlaceList;
+import com.kusitms.hotsixServer.domain.place.dto.RequestPlaceDto;
 import com.kusitms.hotsixServer.domain.place.entity.Bookmark;
-import com.kusitms.hotsixServer.domain.place.entity.Category1;
+import com.kusitms.hotsixServer.domain.place.entity.Category2;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
 import com.kusitms.hotsixServer.domain.place.repository.BookmarkRepository;
-import com.kusitms.hotsixServer.domain.place.repository.Category1Repository;
+import com.kusitms.hotsixServer.domain.place.repository.Category2Repository;
 import com.kusitms.hotsixServer.domain.place.repository.PlaceFilterRepository;
 import com.kusitms.hotsixServer.domain.review.repository.ReviewRepository;
 import com.kusitms.hotsixServer.domain.user.entity.User;
+import com.kusitms.hotsixServer.domain.user.entity.UserFilter;
+import com.kusitms.hotsixServer.domain.user.repository.UserFilterRepository;
 import com.kusitms.hotsixServer.domain.user.repository.UserRepository;
-import com.kusitms.hotsixServer.global.error.BaseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -20,45 +22,78 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.kusitms.hotsixServer.global.config.SecurityUtil.getCurrentUserEmail;
-import static com.kusitms.hotsixServer.global.error.ErrorCode.CATEGORY1_ERROR;
 @Service
 @Transactional
 @Slf4j
 public class PlaceCategoryService {
 
-    private final Category1Repository category1Repository;
+    private final Category2Repository category2Repository;
     private final PlaceFilterRepository placeFilterRepository;
     private final UserRepository userRepository;
+    private final UserFilterRepository userFilterRepository;
     private final ReviewRepository reviewRepository;
     private final BookmarkRepository bookmarkRepository;
 
-    public PlaceCategoryService(Category1Repository category1Repository, PlaceFilterRepository placeFilterRepository,
-                                UserRepository userRepository, ReviewRepository reviewRepository, BookmarkRepository bookmarkRepository) {
-        this.category1Repository = category1Repository;
+    public PlaceCategoryService(Category2Repository category2Repository, PlaceFilterRepository placeFilterRepository, UserRepository userRepository,
+                                ReviewRepository reviewRepository, BookmarkRepository bookmarkRepository, UserFilterRepository userFilterRepository) {
+        this.category2Repository = category2Repository;
         this.placeFilterRepository = placeFilterRepository;
         this.userRepository = userRepository;
         this.reviewRepository = reviewRepository;
         this.bookmarkRepository = bookmarkRepository;
+        this.userFilterRepository = userFilterRepository;
 
     }
 
-    public Category1Response getPlacesByCategory1Response(Long category1Id) {
-        List<Place> places = getPlacesByCategory1(category1Id);
-        List<Category1Response.PlaceInfo> placeInfos = new ArrayList<>();
+    public ResponsePlaceList getPlacesByCategory1Response(Long Category1Id, RequestPlaceDto dto) {
+        List<Place> places = getPlacesByCategory1(Category1Id, dto); //조건에 맞는 장소 List 출력
+        List<ResponsePlaceList.PlaceInfo> placeInfos = new ArrayList<>();
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow();
 
         for (Place place : places) {
-            Category1Response.PlaceInfo placeInfo = createPlaceInfo(place, user);
+            ResponsePlaceList.PlaceInfo placeInfo = createPlaceInfo(place, user);
             placeInfos.add(placeInfo);
         }
 
-        return Category1Response.builder()
+        return ResponsePlaceList.builder()
                 .places(placeInfos)
                 .build();
     }
 
-    private Category1Response.PlaceInfo createPlaceInfo(Place place, User user) {
-        return Category1Response.PlaceInfo.builder()
+
+    public List<Place> getPlacesByCategory1(Long category1Id, RequestPlaceDto dto) {
+
+        User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); // User 조회
+        Category2 category2 = category2Repository.findByName(dto.getCategory2()); //카테고리 2 값 조회
+
+        int orderBy = 0;
+        if(String.valueOf(dto.getOrderBy())!= null){
+            orderBy = dto.getOrderBy();
+        } // orderBy값 null이면 0으로 설정
+
+        Long category2Id = 0L;
+        if (category2 != null){
+            category2Id = category2.getId();
+        } //category2값 nul이면 0으로 설정
+
+        String[] filters = dto.getFilters();
+        if (filters == null || filters.length == 0) { //선택한 filter값이 null이면 사용자 기본 필터값 가져오기
+            List<UserFilter> userFilters = userFilterRepository.findAllByUser(user);
+
+            filters = userFilters.stream()
+                    .map(userFilter -> userFilter.getFilter().getName())
+                    .toArray(String[]::new);
+        }
+
+        if(orderBy == 5){ // orderBy가 5면 별점 오름차순 (별점 낮은순)
+            return placeFilterRepository.findAllCategory1AndCategory2ASC(category1Id, category1Id, filters);
+        } //나머지는 조건에 따라 내림차순
+        return placeFilterRepository.findAllCategory1AndCategory2(category1Id, category2Id, orderBy, filters);
+    }
+
+
+    private ResponsePlaceList.PlaceInfo createPlaceInfo(Place place, User user) {
+        return ResponsePlaceList.PlaceInfo.builder()
                 .id(place.getId())
                 .name(place.getName())
                 .starRating(place.getStarRating())
@@ -69,17 +104,6 @@ public class PlaceCategoryService {
                 .top2Stickers(findTop2StickersByPlace(place))
                 .isBookmarked(checkBookmark(user, place))
                 .build();
-    }
-
-    public List<Place> getPlacesByCategory1(Long id) {
-
-        User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow();
-
-        //카테고리 id가 카테고리 범위에 있는지 확인
-        Category1 category1 = category1Repository.findById(id)
-                .orElseThrow(() -> new BaseException(CATEGORY1_ERROR));
-
-        return placeFilterRepository.findAllByUserAndCategory1(user, category1.getId());
     }
 
     private String[] findTop2StickersByPlace(Place place) {
