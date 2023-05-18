@@ -1,4 +1,4 @@
-package com.kusitms.hotsixServer.domain.main.dto;
+package com.kusitms.hotsixServer.domain.main.dto.res;
 
 import lombok.*;
 
@@ -7,18 +7,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class PlaceByBookmarkCntCto {
+public class GetPlaceBookmarkRes {
 
-    private List<Places> restaurants;
-    private List<Places> cafe;
-    private List<Places> play;
+    private List<Place> restaurant;
+    private List<Place> cafe;
+    private List<Place> play;
 
-    @Data
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(force = true)
-    @Builder
-    public static class Places {
+    public static class Place {
         private Long id;
         private String name;
         private String img;
