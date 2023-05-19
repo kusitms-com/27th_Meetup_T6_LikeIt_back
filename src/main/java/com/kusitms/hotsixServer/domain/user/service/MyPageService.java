@@ -4,7 +4,7 @@ import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
 import com.kusitms.hotsixServer.domain.review.entity.Review;
 import com.kusitms.hotsixServer.domain.review.entity.ReviewSticker;
 import com.kusitms.hotsixServer.domain.review.repository.ReviewRepository;
-import com.kusitms.hotsixServer.domain.user.dto.FilterDto;
+import com.kusitms.hotsixServer.domain.user.dto.req.FilterDtoReq;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
 import com.kusitms.hotsixServer.domain.user.entity.Filter;
 import com.kusitms.hotsixServer.domain.user.entity.User;
@@ -42,7 +42,7 @@ public class MyPageService {
     private final FilterRepository filterRepository;
 
     //회원 정보 조회
-    public UserDto.userInfoResponse getUserInfo(){
+    public UserDto.GetUserInfoRes getUserInfo(){
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
 
         List<String> filters = userFilterRepository.findAllByUserFetchFilter(user)
@@ -50,12 +50,12 @@ public class MyPageService {
                 .map(userFilter -> userFilter.getFilter().getName())
                 .collect(Collectors.toList());
 
-        return UserDto.userInfoResponse.response(user, filters);
+        return UserDto.GetUserInfoRes.from(user, filters);
 
     }
 
     //회원 정보 수정
-    public void updateUserInfo(UserDto.updateInfo updateInfo, MultipartFile multipartFile){
+    public void updateUserInfo(UserDto.UpdateInfoReq updateInfo, MultipartFile multipartFile){
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
 
         if(updateInfo.getNickname()!=null){
@@ -108,7 +108,7 @@ public class MyPageService {
         return stickerNames;
     }
 
-    public void updateFilters(FilterDto dto){
+    public void updateFilters(FilterDtoReq dto){
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
 
         userFilterRepository.deleteAllByUser(user);

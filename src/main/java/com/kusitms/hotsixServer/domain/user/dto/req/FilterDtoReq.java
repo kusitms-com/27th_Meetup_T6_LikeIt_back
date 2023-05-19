@@ -1,12 +1,12 @@
-package com.kusitms.hotsixServer.domain.user.dto;
+package com.kusitms.hotsixServer.domain.user.dto.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-public class IdTokenDto {
-    private String idToken;
+public class FilterDtoReq {
+   private String[] filters;
 }

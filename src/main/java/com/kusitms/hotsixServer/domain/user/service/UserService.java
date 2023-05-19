@@ -1,6 +1,6 @@
 package com.kusitms.hotsixServer.domain.user.service;
 
-import com.kusitms.hotsixServer.domain.user.dto.FilterDto;
+import com.kusitms.hotsixServer.domain.user.dto.req.FilterDtoReq;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
 import com.kusitms.hotsixServer.domain.user.entity.Filter;
 import com.kusitms.hotsixServer.domain.user.entity.User;
@@ -41,19 +41,19 @@ public class UserService {
 
     //accessToken 재발급
     @Transactional
-    public UserDto.tokenResponse reissue(String rtk) {
+    public UserDto.TokenRes reissue(String rtk) {
         String username = tokenProvider.getRefreshTokenInfo(rtk);
         String rtkInRedis = redisDao.getValues(username);
 
         if (Objects.isNull(rtkInRedis) || !rtkInRedis.equals(rtk))
             throw new BaseException(Token_Error);
 
-        return UserDto.tokenResponse.response(tokenProvider.reCreateToken(username), null);
+        return UserDto.TokenRes.from(tokenProvider.reCreateToken(username), null);
     }
 
     //취향 카테고리 선택
     @Transactional
-    public void setFilter(FilterDto dto){
+    public void setFilter(FilterDtoReq dto){
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow();
 
         if(dto.getFilters().length>2) throw new BaseException(SET_FILTER_ERROR);

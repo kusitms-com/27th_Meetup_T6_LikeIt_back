@@ -7,7 +7,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Builder
 @Entity
 @Table(name = "filters")
 public class Filter {
