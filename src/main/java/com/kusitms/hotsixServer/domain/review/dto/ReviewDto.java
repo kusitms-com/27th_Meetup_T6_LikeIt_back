@@ -1,44 +1,45 @@
 package com.kusitms.hotsixServer.domain.review.dto;
 
-import com.kusitms.hotsixServer.domain.user.dto.UserDto;
-import lombok.Builder;
-import lombok.Data;
+import com.kusitms.hotsixServer.domain.place.dto.PlaceDetail;
+import lombok.*;
 
-@Data
+
+@Getter
 @Builder
 public class ReviewDto {
 
-    private String nickname;
+    private Long id;
+    private String username;
+    private String img;
     private float starRating;
     private String content;
     private int likeCount;
     private int dislikeCount;
     private String[] stickers;
 
-    @Data
+    public static ReviewDto from(Long id, String name, String img, float starRating, String content, int likeCount, int dislikeCount, String[] stickers){
+        return ReviewDto.builder()
+                .id(id)
+                .username(name)
+                .img(img)
+                .starRating(starRating)
+                .content(content)
+                .likeCount(likeCount)
+                .dislikeCount(dislikeCount)
+                .stickers(stickers)
+                .build();
+    }
+    @Getter
     @Builder
-    public static class myReviewResponse {
-        private String placeName;
-        private String nickname;
-        private float starRating;
-        private String content;
-        private int likeCount;
-        private int dislikeCount;
-        private String[] stickers;
-        private String img;
+    public static class myReviewRes {
+        private ReviewDto reviewDto;
+        private PlaceDetail.SimplePlaceInfo placeInfo;
 
-        public static myReviewResponse response(
-                String placeName,String nickname,float starRating,String content,
-                int likeCount,int dislikeCount, String[] stickers, String img) {
-            return myReviewResponse.builder()
-                    .placeName(placeName)
-                    .nickname(nickname)
-                    .starRating(starRating)
-                    .content(content)
-                    .likeCount(likeCount)
-                    .dislikeCount(dislikeCount)
-                    .stickers(stickers)
-                    .img(img).build();
+        public static myReviewRes from (ReviewDto reviewDto, PlaceDetail.SimplePlaceInfo placeInfo) {
+           return myReviewRes.builder()
+                   .reviewDto(reviewDto)
+                   .placeInfo(placeInfo)
+                   .build();
         }
 
     }

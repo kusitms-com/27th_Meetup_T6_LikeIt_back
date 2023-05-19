@@ -54,14 +54,9 @@ public class PlaceDetailService {
 
         List<ReviewDto> reviewInfos = new ArrayList<>();
         for (Review review : reviews) {
-            ReviewDto reviewInfo = ReviewDto.builder()
-                    .nickname(review.getUser().getNickname())
-                    .starRating(review.getStarRating())
-                    .content(review.getContent())
-                    .likeCount(review.getLikeCount())
-                    .dislikeCount(review.getDislikeCount())
-                    .stickers(getStickerNames(review))
-                    .build();
+            ReviewDto reviewInfo = ReviewDto.from(review.getId(), review.getUser().getNickname(),
+                    review.getReviewImg(), review.getStarRating(), review.getContent(),
+                    review.getLikeCount(),review.getDislikeCount(),getStickerNames(review));
             reviewInfos.add(reviewInfo);
         }
 

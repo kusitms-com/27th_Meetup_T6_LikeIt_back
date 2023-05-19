@@ -48,7 +48,7 @@ public class MyPageController {
 
     @ApiOperation("내 리뷰 반환")
     @GetMapping("/review")
-    public ResponseEntity<ResponseDto<List<ReviewDto.myReviewResponse>>> getReview(){
+    public ResponseEntity<ResponseDto<List<ReviewDto.myReviewRes>>> getReview(){
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.GET_USERREVIEW_SUCCESS.getMessage(),
                 this.myPageService.getReviews()));
