@@ -11,7 +11,7 @@ public class RequestReviewDto {
 
     private Long userId;
     private Long placeId;
-    private float starRating;
+    private int starRating;
     private String content;
     private String[] stickers;
 

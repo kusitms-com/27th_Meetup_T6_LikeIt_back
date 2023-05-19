@@ -11,13 +11,13 @@ public class ReviewDto {
     private Long id;
     private String username;
     private String img;
-    private float starRating;
+    private int starRating;
     private String content;
     private int likeCount;
     private int dislikeCount;
     private String[] stickers;
 
-    public static ReviewDto from(Long id, String name, String img, float starRating, String content, int likeCount, int dislikeCount, String[] stickers){
+    public static ReviewDto from(Long id, String name, String img, int starRating, String content, int likeCount, int dislikeCount, String[] stickers){
         return ReviewDto.builder()
                 .id(id)
                 .username(name)

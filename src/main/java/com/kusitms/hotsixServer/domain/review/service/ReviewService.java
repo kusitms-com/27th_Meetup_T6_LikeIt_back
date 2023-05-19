@@ -46,6 +46,7 @@ public class ReviewService {
         Review review = Review.createReview(user, place, imgPath, dto);
 
         reviewRepository.save(review);
+        place.setReviewCount(place.getReviewCount() + 1);
 
         String[] stickers = dto.getStickers();
         for (String stickerName : stickers) {
@@ -62,9 +63,12 @@ public class ReviewService {
         Optional<Review> optionalReview = reviewRepository.findById(reviewId);
         if (optionalReview.isPresent()) {
             Review review = optionalReview.get();
+            Place place = review.getPlace();
             reviewRepository.delete(review);
+            place.setReviewCount(place.getReviewCount() - 1);
         }
     }
+
 
     @Transactional
     public void likeReview(Long reviewId) {
