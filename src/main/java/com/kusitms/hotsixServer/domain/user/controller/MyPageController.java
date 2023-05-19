@@ -27,7 +27,7 @@ public class MyPageController {
 
     @ApiOperation("회원 정보 보여주기")
     @GetMapping("/info")
-    public ResponseEntity<ResponseDto<UserDto.userInfoResponse>> getUserInfo(){
+    public ResponseEntity<ResponseDto<UserDto.GetUserInfoRes>> getUserInfo(){
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.GET_USERINFO_SUCCESS.getMessage(),
                 this.myPageService.getUserInfo()));
@@ -35,7 +35,7 @@ public class MyPageController {
 
     @ApiOperation("회원 정보 수정")
     @PatchMapping("/info")
-    public ResponseEntity<ResponseDto> patchUserInfo(@Validated@RequestPart(value = "data") UserDto.updateInfo updateInfo, @RequestPart(value="file", required = false) MultipartFile multipartFile){
+    public ResponseEntity<ResponseDto> patchUserInfo(@Validated@RequestPart(value = "data") UserDto.UpdateInfoReq updateInfo, @RequestPart(value="file", required = false) MultipartFile multipartFile){
         this.myPageService.updateUserInfo(updateInfo,multipartFile);
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.UPDATE_USERINFO.getMessage()));

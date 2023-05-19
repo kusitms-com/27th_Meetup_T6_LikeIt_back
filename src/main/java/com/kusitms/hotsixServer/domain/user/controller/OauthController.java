@@ -25,7 +25,7 @@ public class OauthController {
 
     @ApiOperation("테스트용 회원가입")
     @PostMapping("/signup/test")
-    public ResponseEntity<ResponseDto<UserDto.socialLoginResponse>> testLogin(@RequestParam String email) {
+    public ResponseEntity<ResponseDto<UserDto.SocialLoginRes>> testLogin(@RequestParam String email) {
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.LOGIN_SUCCESS.getMessage(),
                 this.oauthService.oauthLogin(false,email,5L)));
@@ -34,7 +34,7 @@ public class OauthController {
 
     @ApiOperation("ID_TOKEN 요청 API")
     @PostMapping (value="/google/idToken")
-    public ResponseEntity<ResponseDto<UserDto.socialLoginResponse>> signUp (@RequestBody IdTokenDto idTokenDto) throws IOException, GeneralSecurityException {
+    public ResponseEntity<ResponseDto<UserDto.SocialLoginRes>> signUp (@RequestBody IdTokenDto idTokenDto) throws IOException, GeneralSecurityException {
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.LOGIN_TEST_SUCCESS.getMessage(),
                 this.oauthService.appGoogleLogin(idTokenDto)));

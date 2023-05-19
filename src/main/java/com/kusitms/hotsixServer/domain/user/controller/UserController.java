@@ -21,7 +21,7 @@ public class UserController {
 
     //토큰 재발급
     @GetMapping("/regenerateToken")
-    public ResponseEntity<ResponseDto<UserDto.tokenResponse>> reissue(
+    public ResponseEntity<ResponseDto<UserDto.TokenRes>> reissue(
             @RequestHeader(value = "REFRESH_TOKEN") String rtk
     ) {
         return ResponseEntity.ok(ResponseDto.create(

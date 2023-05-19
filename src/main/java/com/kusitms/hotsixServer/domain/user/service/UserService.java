@@ -41,14 +41,14 @@ public class UserService {
 
     //accessToken 재발급
     @Transactional
-    public UserDto.tokenResponse reissue(String rtk) {
+    public UserDto.TokenRes reissue(String rtk) {
         String username = tokenProvider.getRefreshTokenInfo(rtk);
         String rtkInRedis = redisDao.getValues(username);
 
         if (Objects.isNull(rtkInRedis) || !rtkInRedis.equals(rtk))
             throw new BaseException(Token_Error);
 
-        return UserDto.tokenResponse.response(tokenProvider.reCreateToken(username), null);
+        return UserDto.TokenRes.response(tokenProvider.reCreateToken(username), null);
     }
 
     //취향 카테고리 선택

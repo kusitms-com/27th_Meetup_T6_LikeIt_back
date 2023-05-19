@@ -53,7 +53,7 @@ public class OauthService {
     @Value("${app.google.client.id}")
     private String GOOGLE_SNS_CLIENT_ID;
 
-    public UserDto.socialLoginResponse checkUserInDB(GoogleUser googleUser) {
+    public UserDto.SocialLoginRes checkUserInDB(GoogleUser googleUser) {
 
         //회원가입
         if (!userRepository.existsByUserEmail(googleUser.getEmail())) {
@@ -71,7 +71,7 @@ public class OauthService {
 
     }
 
-    public UserDto.socialLoginResponse oauthLogin(boolean isSignUp, String email, Long id) {
+    public UserDto.SocialLoginRes oauthLogin(boolean isSignUp, String email, Long id) {
 
         // (1) authentication 객체 생성 후 SecurityContext에 등록
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, "google");
@@ -86,13 +86,13 @@ public class OauthService {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Bearer " + atk);
 
-        return UserDto.socialLoginResponse.response(
+        return UserDto.SocialLoginRes.response(
                 id, isSignUp, atk, rtk
         );
     }
 
     @Transactional
-    public UserDto.socialLoginResponse appGoogleLogin(IdTokenDto idTokenDto) throws GeneralSecurityException, IOException {
+    public UserDto.SocialLoginRes appGoogleLogin(IdTokenDto idTokenDto) throws GeneralSecurityException, IOException {
         HttpTransport transport = new NetHttpTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 

@@ -7,35 +7,37 @@ import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.List;
 
+
 public class UserDto implements Serializable {
 
-    @Data
     @Getter
     @AllArgsConstructor
-    @NoArgsConstructor(force = true)
+    @NoArgsConstructor
     @Builder
-    public static class updateInfo {
+    public static class UpdateInfoReq {
 
-        private final String nickname;
+        private  String nickname;
 
         @Pattern(regexp = "^\\d{3}-\\d{3,4}-\\d{4}$", message = "휴대전화 형식에 맞지 않습니다.")
-        private final String phoneNum;
+        private  String phoneNum;
 
         @Pattern(regexp = "^\\d{4}.\\d{2}.\\d{2}$", message = "생년월일 형식에 맞지 않습니다.")
-        private final String birthDate;
+        private  String birthDate;
 
     }
 
-    @Data
     @Builder
-    public static class socialLoginResponse {
-        private final Long id;
-        private final boolean isSignUp;
-        private final String atk;
-        private final String rtk;
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class SocialLoginRes {
+        private  Long id;
+        private  boolean isSignUp;
+        private  String atk;
+        private  String rtk;
 
-        public static socialLoginResponse response(Long id, boolean isSignUp, String atk, String rtk) {
-            return socialLoginResponse.builder()
+        public static SocialLoginRes response(Long id, boolean isSignUp, String atk, String rtk) {
+            return SocialLoginRes.builder()
                     .id(id)
                     .isSignUp(isSignUp)
                     .atk(atk)
@@ -45,40 +47,44 @@ public class UserDto implements Serializable {
 
     }
 
-    @Data
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
     @Builder
-    public static class tokenResponse {
-        private final String atk;
-        private final String rtk;
+    public static class TokenRes {
+        private  String atk;
+        private  String rtk;
 
-        public static tokenResponse response(String atk, String rtk) {
-            return tokenResponse.builder()
+        public static TokenRes response(String atk, String rtk) {
+            return TokenRes.builder()
                     .atk(atk)
                     .rtk(rtk)
                     .build();
         }
     }
 
-    @Data
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
     @Builder
-    public static class userInfoResponse {
+    public static class GetUserInfoRes {
 
-        private final String name;
+        private  String name;
 
-        private final String nickname;
+        private  String nickname;
 
-        private final String email;
+        private  String email;
 
-        private final String phoneNum;
+        private  String phoneNum;
 
-        private final String birthDate;
+        private  String birthDate;
 
-        private final String imgUrl;
+        private  String imgUrl;
 
-        private final List<String> filters;
+        private  List<String> filters;
 
-        public static userInfoResponse response(User user, List<String> filters) {
-            return userInfoResponse.builder()
+        public static GetUserInfoRes response(User user, List<String> filters) {
+            return GetUserInfoRes.builder()
                     .name(user.getUserName())
                     .nickname(user.getNickname())
                     .email(user.getUserEmail())
