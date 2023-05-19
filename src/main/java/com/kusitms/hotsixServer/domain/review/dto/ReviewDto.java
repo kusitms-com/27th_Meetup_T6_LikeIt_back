@@ -1,6 +1,6 @@
 package com.kusitms.hotsixServer.domain.review.dto;
 
-import com.kusitms.hotsixServer.domain.place.dto.PlaceDetail;
+import com.kusitms.hotsixServer.domain.place.dto.PlaceDetailDto;
 import lombok.*;
 
 
@@ -33,9 +33,9 @@ public class ReviewDto {
     @Builder
     public static class myReviewRes {
         private ReviewDto reviewDto;
-        private PlaceDetail.SimplePlaceInfo placeInfo;
+        private PlaceDetailDto.SimplePlaceInfo placeInfo;
 
-        public static myReviewRes from (ReviewDto reviewDto, PlaceDetail.SimplePlaceInfo placeInfo) {
+        public static myReviewRes from (ReviewDto reviewDto, PlaceDetailDto.SimplePlaceInfo placeInfo) {
            return myReviewRes.builder()
                    .reviewDto(reviewDto)
                    .placeInfo(placeInfo)

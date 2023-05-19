@@ -8,9 +8,9 @@ import java.util.List;
 
 @Data
 @Builder
-public class PlaceDetail {
+public class PlaceDetailDto {
 
-    private List<PlaceDetail.PlaceInfo> places;
+    private List<PlaceDetailDto.PlaceInfo> places;
 
     @Data
     @Builder
