@@ -1,5 +1,6 @@
 package com.kusitms.hotsixServer.domain.user.service;
 
+import com.kusitms.hotsixServer.domain.place.dto.PlaceDetail;
 import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
 import com.kusitms.hotsixServer.domain.review.entity.Review;
 import com.kusitms.hotsixServer.domain.review.entity.ReviewSticker;
@@ -42,7 +43,7 @@ public class MyPageService {
     private final FilterRepository filterRepository;
 
     //회원 정보 조회
-    public UserDto.GetUserInfoRes getUserInfo(){
+    public UserDto.GetUserInfoRes getUserInfo() {
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
 
         List<String> filters = userFilterRepository.findAllByUserFetchFilter(user)
@@ -55,40 +56,43 @@ public class MyPageService {
     }
 
     //회원 정보 수정
-    public void updateUserInfo(UserDto.UpdateInfoReq updateInfo, MultipartFile multipartFile){
+    public void updateUserInfo(UserDto.UpdateInfoReq updateInfo, MultipartFile multipartFile) {
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
 
-        if(updateInfo.getNickname()!=null){
+        if (updateInfo.getNickname() != null) {
             user.updateNickName(updateInfo.getNickname());
         }
 
-        if(updateInfo.getPhoneNum()!=null){
+        if (updateInfo.getPhoneNum() != null) {
             user.updatePhoneNum(updateInfo.getPhoneNum());
         }
 
-        if(multipartFile != null && !multipartFile.isEmpty()){
+        if (multipartFile != null && !multipartFile.isEmpty()) {
             user.updateImg(s3UploadUtil.upload(multipartFile, "user"));
         }
 
-        if(updateInfo.getBirthDate()!=null){
+        if (updateInfo.getBirthDate() != null) {
             user.updateBirth(updateInfo.getBirthDate());
         }
 
         userRepository.save(user);
     }
 
-    public List<ReviewDto.myReviewResponse> getReviews(){
+    public List<ReviewDto.myReviewRes> getReviews() {
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
 
         List<Review> reviewList = reviewRepository.findMyReview(user);
-        List<ReviewDto.myReviewResponse> myReviewResponses = new ArrayList<>();
+        List<ReviewDto.myReviewRes> myReviewResponses = new ArrayList<>();
 
-        for(Review review : reviewList){
-            ReviewDto.myReviewResponse myReviewResponse = ReviewDto.myReviewResponse.response(
-                    review.getPlace().getName(),user.getNickname(),review.getStarRating(),review.getContent()
-            ,review.getLikeCount(), review.getDislikeCount(), getStickerNames(review), review.getReviewImg());
+        for (Review review : reviewList) {
+            //리뷰 DTO
+            ReviewDto reviewDto = ReviewDto.from(review.getId(), review.getUser().getNickname(), review.getReviewImg(), review.getStarRating(), review.getContent()
+            ,review.getLikeCount(), review.getDislikeCount(), getStickerNames(review));
+            //장소 DTO
+            PlaceDetail.SimplePlaceInfo placeInfo = new PlaceDetail.SimplePlaceInfo(review.getPlace().getId(), review.getPlace().getName());
 
-            myReviewResponses.add(myReviewResponse);
+            ReviewDto.myReviewRes myReviewRes = ReviewDto.myReviewRes.from(reviewDto,placeInfo);
+            myReviewResponses.add(myReviewRes);
         }
 
         return myReviewResponses;
@@ -108,15 +112,16 @@ public class MyPageService {
         return stickerNames;
     }
 
-    public void updateFilters(FilterDtoReq dto){
+    public void updateFilters(FilterDtoReq dto) {
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
 
         userFilterRepository.deleteAllByUser(user);
-        for(int i=0; i<dto.getFilters().length; i++){
+        for (int i = 0; i < dto.getFilters().length; i++) {
             Filter getFilter = filterRepository.findByName(dto.getFilters()[i]).orElseThrow();
             UserFilter userFilter = new UserFilter(getFilter, user);
             userFilterRepository.save(userFilter);
         }
 
     }
+
 }

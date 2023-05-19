@@ -2,8 +2,7 @@ package com.kusitms.hotsixServer.domain.place.dto;
 
 
 import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
@@ -28,7 +27,18 @@ public class PlaceDetail {
         private int[] top2NegativeStickerCount;
         private char isBookmarked;
         private List<ReviewDto> reviews;
+
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    public static class SimplePlaceInfo {
+        private Long id;
+        private String name;
+    }
+
+
 
 }
 
