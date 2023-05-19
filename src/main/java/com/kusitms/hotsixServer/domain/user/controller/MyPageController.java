@@ -21,7 +21,6 @@ import java.util.List;
 @RestController
 @RequestMapping("mypage")
 @RequiredArgsConstructor
-@Slf4j
 public class MyPageController {
 
     private final MyPageService myPageService;
@@ -44,7 +43,7 @@ public class MyPageController {
 
     @ApiOperation("취향 카테고리 수정")
     @PatchMapping("/filter")
-    public ResponseEntity<ResponseDto> patchf(@RequestBody FilterDto filterDto){
+    public ResponseEntity<ResponseDto> patchfilter(@RequestBody FilterDto filterDto){
         this.myPageService.updateFilters(filterDto);
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.UPDATE_USERFILTER_SUCCESS.getMessage()));

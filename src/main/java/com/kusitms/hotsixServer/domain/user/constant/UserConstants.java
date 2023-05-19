@@ -19,10 +19,4 @@ public class UserConstants {
         REGENERATE_TOKEN_SUCCESS("토큰 재발급에 성공했습니다.");
         private final String message;
     }
-    @Getter
-    @RequiredArgsConstructor
-    public enum EToken{
-        eRefreshToken("RT:");
-        private final String message;
-    }
 }
