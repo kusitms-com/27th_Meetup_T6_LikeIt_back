@@ -5,7 +5,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.kusitms.hotsixServer.domain.user.dto.GoogleUser;
-import com.kusitms.hotsixServer.domain.user.dto.IdTokenDto;
+import com.kusitms.hotsixServer.domain.user.dto.req.IdTokenReq;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
 import com.kusitms.hotsixServer.domain.user.entity.User;
 import com.kusitms.hotsixServer.domain.user.repository.UserRepository;
@@ -58,7 +58,7 @@ public class OauthService {
         //회원가입
         if (!userRepository.existsByUserEmail(googleUser.getEmail())) {
 
-            User newUser = User.createUser(googleUser, passwordEncoder);
+            User newUser =  new User(googleUser, passwordEncoder);
             Long id = userRepository.save(newUser).getId();
             boolean isSignUp = true;
             return oauthLogin(isSignUp, newUser.getUserEmail(), id);
@@ -92,7 +92,7 @@ public class OauthService {
     }
 
     @Transactional
-    public UserDto.SocialLoginRes appGoogleLogin(IdTokenDto idTokenDto) throws GeneralSecurityException, IOException {
+    public UserDto.SocialLoginRes appGoogleLogin(IdTokenReq idTokenReq) throws GeneralSecurityException, IOException {
         HttpTransport transport = new NetHttpTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 
@@ -100,7 +100,7 @@ public class OauthService {
                 .setAudience(Collections.singletonList(GOOGLE_SNS_CLIENT_ID))
                 .build();
 
-        GoogleIdToken idToken = verifier.verify(idTokenDto.getIdToken());
+        GoogleIdToken idToken = verifier.verify(idTokenReq.getIdToken());
 
         if (idToken != null) {
             Payload payload = idToken.getPayload();

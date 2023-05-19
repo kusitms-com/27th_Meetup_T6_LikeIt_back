@@ -4,7 +4,7 @@ import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
 import com.kusitms.hotsixServer.domain.review.entity.Review;
 import com.kusitms.hotsixServer.domain.review.entity.ReviewSticker;
 import com.kusitms.hotsixServer.domain.review.repository.ReviewRepository;
-import com.kusitms.hotsixServer.domain.user.dto.FilterDto;
+import com.kusitms.hotsixServer.domain.user.dto.req.FilterDtoReq;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
 import com.kusitms.hotsixServer.domain.user.entity.Filter;
 import com.kusitms.hotsixServer.domain.user.entity.User;
@@ -108,7 +108,7 @@ public class MyPageService {
         return stickerNames;
     }
 
-    public void updateFilters(FilterDto dto){
+    public void updateFilters(FilterDtoReq dto){
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
 
         userFilterRepository.deleteAllByUser(user);

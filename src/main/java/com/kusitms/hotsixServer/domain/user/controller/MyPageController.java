@@ -2,16 +2,13 @@ package com.kusitms.hotsixServer.domain.user.controller;
 
 import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
 import com.kusitms.hotsixServer.domain.user.constant.UserConstants;
-import com.kusitms.hotsixServer.domain.user.dto.FilterDto;
+import com.kusitms.hotsixServer.domain.user.dto.req.FilterDtoReq;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
-import com.kusitms.hotsixServer.domain.user.entity.User;
 import com.kusitms.hotsixServer.domain.user.service.MyPageService;
 import com.kusitms.hotsixServer.global.dto.ResponseDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,8 +40,8 @@ public class MyPageController {
 
     @ApiOperation("취향 카테고리 수정")
     @PatchMapping("/filter")
-    public ResponseEntity<ResponseDto> patchfilter(@RequestBody FilterDto filterDto){
-        this.myPageService.updateFilters(filterDto);
+    public ResponseEntity<ResponseDto> patchfilter(@RequestBody FilterDtoReq filterDtoReq){
+        this.myPageService.updateFilters(filterDtoReq);
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.UPDATE_USERFILTER_SUCCESS.getMessage()));
     }

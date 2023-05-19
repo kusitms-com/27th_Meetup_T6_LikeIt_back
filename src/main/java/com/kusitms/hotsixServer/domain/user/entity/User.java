@@ -11,7 +11,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Builder
 @Entity
 @Table(name = "users")
 public class User extends BaseTimeEntity {
@@ -43,14 +42,12 @@ public class User extends BaseTimeEntity {
     @Column(name="password")
     private String password;
 
-    public static User createUser (GoogleUser googleUser, PasswordEncoder passwordEncoder) {
-
-        return User.builder()
-                .userName(googleUser.getName())
-                .userEmail(googleUser.getEmail())
-                .userImg(googleUser.getPicture())
-                .password(passwordEncoder.encode("google"))
-                .build();
+    @Builder
+    public User(GoogleUser googleUser, PasswordEncoder passwordEncoder){
+        this.userName = googleUser.getName();
+        this.userEmail = googleUser.getEmail();
+        this.userImg = googleUser.getPicture();
+        this.password = passwordEncoder.encode("google");
     }
 
     public void updateNickName(String nickname){
