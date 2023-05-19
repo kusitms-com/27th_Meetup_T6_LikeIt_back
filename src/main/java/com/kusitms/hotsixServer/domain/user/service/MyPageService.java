@@ -50,7 +50,7 @@ public class MyPageService {
                 .map(userFilter -> userFilter.getFilter().getName())
                 .collect(Collectors.toList());
 
-        return UserDto.GetUserInfoRes.response(user, filters);
+        return UserDto.GetUserInfoRes.from(user, filters);
 
     }
 

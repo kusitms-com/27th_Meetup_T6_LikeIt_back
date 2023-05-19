@@ -48,7 +48,7 @@ public class UserService {
         if (Objects.isNull(rtkInRedis) || !rtkInRedis.equals(rtk))
             throw new BaseException(Token_Error);
 
-        return UserDto.TokenRes.response(tokenProvider.reCreateToken(username), null);
+        return UserDto.TokenRes.from(tokenProvider.reCreateToken(username), null);
     }
 
     //취향 카테고리 선택

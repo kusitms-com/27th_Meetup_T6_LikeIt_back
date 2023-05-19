@@ -36,7 +36,7 @@ public class UserDto implements Serializable {
         private  String atk;
         private  String rtk;
 
-        public static SocialLoginRes response(Long id, boolean isSignUp, String atk, String rtk) {
+        public static SocialLoginRes from (Long id, boolean isSignUp, String atk, String rtk) {
             return SocialLoginRes.builder()
                     .id(id)
                     .isSignUp(isSignUp)
@@ -55,7 +55,7 @@ public class UserDto implements Serializable {
         private  String atk;
         private  String rtk;
 
-        public static TokenRes response(String atk, String rtk) {
+        public static TokenRes from (String atk, String rtk) {
             return TokenRes.builder()
                     .atk(atk)
                     .rtk(rtk)
@@ -83,7 +83,7 @@ public class UserDto implements Serializable {
 
         private  List<String> filters;
 
-        public static GetUserInfoRes response(User user, List<String> filters) {
+        public static GetUserInfoRes from (User user, List<String> filters) {
             return GetUserInfoRes.builder()
                     .name(user.getUserName())
                     .nickname(user.getNickname())

@@ -86,7 +86,7 @@ public class OauthService {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Bearer " + atk);
 
-        return UserDto.SocialLoginRes.response(
+        return UserDto.SocialLoginRes.from(
                 id, isSignUp, atk, rtk
         );
     }
