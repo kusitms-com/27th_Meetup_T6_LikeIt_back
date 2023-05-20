@@ -2,6 +2,7 @@ package com.kusitms.hotsixServer.domain.place.repository;
 
 import com.kusitms.hotsixServer.domain.place.entity.Category1;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
+import com.kusitms.hotsixServer.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +26,9 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             "where (p.category1_id=:id) and (b.modified_at between :startOfWeek and :endOfWeek) " +
             "group by b.place_id order by count(b.place_id) desc limit 2;", nativeQuery = true)
     List<Place> findByBookmarkCntInMain(@Param("id") Long id, @Param("startOfWeek") String startOfWeek, @Param("endOfWeek") String endOfWeek);
+
+    @Query(value = "select p.* from places p " +
+            "join bookmarks b on p.place_id = b.place_id " +
+            "where b.user_id = :id ", nativeQuery = true)
+    List<Place> findForBookmark (@Param("id") Long id);
 }

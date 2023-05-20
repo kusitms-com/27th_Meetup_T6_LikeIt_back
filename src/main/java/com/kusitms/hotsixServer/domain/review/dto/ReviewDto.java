@@ -19,7 +19,8 @@ public class ReviewDto {
         private int dislikeCount;
         private String[] stickers;
 
-        public static reviewRes from(Long id, String name, String img, float starRating, String content, int likeCount, int dislikeCount, String[] stickers) {
+
+        public static reviewRes from(Long id, String name, String img, float starRating, String content, int likeCount, int dislikeCount, String[] stickers){
             return reviewRes.builder()
                     .id(id)
                     .username(name)
@@ -33,21 +34,20 @@ public class ReviewDto {
         }
     }
 
-        @Getter
-        @Builder
-        public static class myReviewRes {
+    @Getter
+    @Builder
+    public static class myReviewRes {
+        private reviewRes reviewRes;
+        private PlaceDetailDto.SimplePlaceRes placeRes;
 
-            private reviewRes reviewRes;
-            private PlaceDetailDto.SimplePlaceRes placeRes;
+        public static myReviewRes from(reviewRes reviewRes, PlaceDetailDto.SimplePlaceRes placeInfo) {
+            return myReviewRes.builder()
+                    .reviewRes(reviewRes)
+                    .placeRes(placeInfo)
+                    .build();
 
-            public static myReviewRes from(reviewRes reviewRes, PlaceDetailDto.SimplePlaceRes placeInfo) {
-                return myReviewRes.builder()
-                        .reviewRes(reviewRes)
-                        .placeRes(placeInfo)
-                        .build();
-            }
 
         }
 
-
+    }
 }
