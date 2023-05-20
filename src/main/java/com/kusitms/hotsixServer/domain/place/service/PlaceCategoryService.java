@@ -67,7 +67,7 @@ public class PlaceCategoryService {
         Category2 category2 = category2Repository.findByName(dto.getCategory2()); //카테고리 2 값 조회
 
         int orderBy = 0;
-        if(String.valueOf(dto.getOrderBy())!= null){ // orderBy값 null이면 0으로 설정
+        if(String.valueOf(dto.getOrderBy())!= null){
             orderBy = dto.getOrderBy();
         } // orderBy값 null이면 0으로 설정
 
