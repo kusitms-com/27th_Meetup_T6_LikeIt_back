@@ -52,9 +52,9 @@ public class PlaceDetailService {
             throw new BaseException(PLACE_ERROR);
         }
 
-        List<ReviewDto> reviewInfos = new ArrayList<>();
+        List<ReviewDto.reviewRes> reviewInfos = new ArrayList<>();
         for (Review review : reviews) {
-            ReviewDto reviewInfo = ReviewDto.from(review.getId(), review.getUser().getNickname(),
+            ReviewDto.reviewRes reviewInfo = ReviewDto.reviewRes.from(review.getId(), review.getUser().getNickname(),
                     review.getReviewImg(), review.getStarRating(), review.getContent(),
                     review.getLikeCount(),review.getDislikeCount(),getStickerNames(review));
             reviewInfos.add(reviewInfo);

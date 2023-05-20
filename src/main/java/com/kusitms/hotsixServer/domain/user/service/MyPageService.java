@@ -1,6 +1,13 @@
 package com.kusitms.hotsixServer.domain.user.service;
 
+<<<<<<< HEAD
+import com.kusitms.hotsixServer.domain.place.dto.PlaceDetail;
+import com.kusitms.hotsixServer.domain.place.entity.Place;
+import com.kusitms.hotsixServer.domain.place.repository.BookmarkRepository;
+import com.kusitms.hotsixServer.domain.place.repository.PlaceRepository;
+=======
 import com.kusitms.hotsixServer.domain.place.dto.PlaceDetailDto;
+>>>>>>> main
 import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
 import com.kusitms.hotsixServer.domain.review.entity.Review;
 import com.kusitms.hotsixServer.domain.review.entity.ReviewSticker;
@@ -41,6 +48,10 @@ public class MyPageService {
     private final ReviewRepository reviewRepository;
 
     private final FilterRepository filterRepository;
+
+    private final BookmarkRepository bookmarkRepository;
+
+    private final PlaceRepository placeRepository;
 
     //회원 정보 조회
     public UserDto.GetUserInfoRes getUserInfo() {
@@ -86,12 +97,12 @@ public class MyPageService {
 
         for (Review review : reviewList) {
             //리뷰 DTO
-            ReviewDto reviewDto = ReviewDto.from(review.getId(), review.getUser().getNickname(), review.getReviewImg(), review.getStarRating(), review.getContent()
-            ,review.getLikeCount(), review.getDislikeCount(), getStickerNames(review));
+            ReviewDto.reviewRes reviewDto = ReviewDto.reviewRes.from(review.getId(), review.getUser().getNickname(), review.getReviewImg(), review.getStarRating(), review.getContent()
+                    , review.getLikeCount(), review.getDislikeCount(), getStickerNames(review));
             //장소 DTO
-            PlaceDetailDto.SimplePlaceInfo placeInfo = new PlaceDetailDto.SimplePlaceInfo(review.getPlace().getId(), review.getPlace().getName());
+            PlaceDetailDto.SimplePlaceRes placeInfo = new PlaceDetailDto.SimplePlaceRes(review.getPlace().getId(), review.getPlace().getName());
 
-            ReviewDto.myReviewRes myReviewRes = ReviewDto.myReviewRes.from(reviewDto,placeInfo);
+            ReviewDto.myReviewRes myReviewRes = ReviewDto.myReviewRes.from(reviewDto, placeInfo);
             myReviewResponses.add(myReviewRes);
         }
 
@@ -123,5 +134,19 @@ public class MyPageService {
         }
 
     }
+
+    public List<PlaceDetailDto.SimplePlaceRes2> getBookmark() {
+        User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
+
+        List<Place> placeList = placeRepository.findForBookmark(user.getId());
+        List<PlaceDetailDto.SimplePlaceRes2> result = new ArrayList<>();
+        for (Place place : placeList) {
+            PlaceDetailDto.SimplePlaceRes2 placeInfo = new PlaceDetailDto.SimplePlaceRes2(place.getId(),place.getName(),place.getPlaceImg());
+            result.add(placeInfo);
+        }
+
+        return result;
+    }
+
 
 }

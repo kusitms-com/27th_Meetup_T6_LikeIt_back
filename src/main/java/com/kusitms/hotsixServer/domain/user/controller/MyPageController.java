@@ -1,5 +1,6 @@
 package com.kusitms.hotsixServer.domain.user.controller;
 
+import com.kusitms.hotsixServer.domain.place.dto.PlaceDetailDto;
 import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
 import com.kusitms.hotsixServer.domain.user.constant.UserConstants;
 import com.kusitms.hotsixServer.domain.user.dto.req.FilterDtoReq;
@@ -24,7 +25,7 @@ public class MyPageController {
 
     @ApiOperation("회원 정보 보여주기")
     @GetMapping("/info")
-    public ResponseEntity<ResponseDto<UserDto.GetUserInfoRes>> getUserInfo(){
+    public ResponseEntity<ResponseDto<UserDto.GetUserInfoRes>> getUserInfo() {
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.GET_USERINFO_SUCCESS.getMessage(),
                 this.myPageService.getUserInfo()));
@@ -32,15 +33,15 @@ public class MyPageController {
 
     @ApiOperation("회원 정보 수정")
     @PatchMapping("/info")
-    public ResponseEntity<ResponseDto> patchUserInfo(@Validated@RequestPart(value = "data") UserDto.UpdateInfoReq updateInfo, @RequestPart(value="file", required = false) MultipartFile multipartFile){
-        this.myPageService.updateUserInfo(updateInfo,multipartFile);
+    public ResponseEntity<ResponseDto> patchUserInfo(@Validated @RequestPart(value = "data") UserDto.UpdateInfoReq updateInfo, @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
+        this.myPageService.updateUserInfo(updateInfo, multipartFile);
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.UPDATE_USERINFO.getMessage()));
     }
 
     @ApiOperation("취향 카테고리 수정")
     @PatchMapping("/filter")
-    public ResponseEntity<ResponseDto> patchfilter(@RequestBody FilterDtoReq filterDtoReq){
+    public ResponseEntity<ResponseDto> patchfilter(@RequestBody FilterDtoReq filterDtoReq) {
         this.myPageService.updateFilters(filterDtoReq);
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.UPDATE_USERFILTER_SUCCESS.getMessage()));
@@ -48,10 +49,18 @@ public class MyPageController {
 
     @ApiOperation("내 리뷰 반환")
     @GetMapping("/review")
-    public ResponseEntity<ResponseDto<List<ReviewDto.myReviewRes>>> getReview(){
+    public ResponseEntity<ResponseDto<List<ReviewDto.myReviewRes>>> getReview() {
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.GET_USERREVIEW_SUCCESS.getMessage(),
                 this.myPageService.getReviews()));
+    }
+
+    @ApiOperation("북마크")
+    @GetMapping("/bookmark")
+    public ResponseEntity<ResponseDto<List<PlaceDetailDto.SimplePlaceRes2>>> getBookmark() {
+        return ResponseEntity.ok(ResponseDto.create(
+                UserConstants.EBoardResponseMessage.GET_USERBOOKMARK_SUCCESS.getMessage(),
+                this.myPageService.getBookmark()));
     }
 
 }
