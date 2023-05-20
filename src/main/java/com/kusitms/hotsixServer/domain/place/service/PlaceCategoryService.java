@@ -87,17 +87,19 @@ public class PlaceCategoryService {
 
 
         if(orderBy == 5){  // orderBy가 5면 별점 오름차순 (별점 낮은순)
-            return placeFilterRepository.findAllCategory1AndCategory2ASC(category1Id, category1Id, filters);
+            return placeFilterRepository.findAllCategory1AndCategory2ASC(category1Id, category2Id, filters);
         } //나머지는 조건에 따라 내림차순
         return placeFilterRepository.findAllCategory1AndCategory2(category1Id, category2Id, orderBy, filters);
     }
 
 
     private PlaceListDto.PlaceInfo createPlaceInfo(Place place, User user) {
+        float starRating = place.getStarRating() / place.getReviewCount();
+        float formattedRating = (float) (Math.floor(starRating * 10) / 10);
         return PlaceListDto.PlaceInfo.builder()
                 .id(place.getId())
                 .name(place.getName())
-                .starRating(place.getStarRating())
+                .starRating(formattedRating)
                 .reviewCount(place.getReviewCount())
                 .placeImg(place.getPlaceImg())
                 .content(place.getContent())
