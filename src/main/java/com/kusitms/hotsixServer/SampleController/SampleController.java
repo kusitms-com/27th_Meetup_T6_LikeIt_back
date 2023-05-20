@@ -10,7 +10,7 @@ public class SampleController {
 
     @GetMapping(value = "/sample")
     public String sample(){
-        log.info("test");
+        log.info("ci/cd 시간 체크");
         return "hello springboot!" ;
     }
 }
