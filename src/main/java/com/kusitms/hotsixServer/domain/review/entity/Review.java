@@ -33,7 +33,7 @@ public class Review extends BaseTimeEntity {
     private Place place;
 
     @Column(name = "star_rating")
-    private float starRating;
+    private int starRating;
 
     @Column(name = "content")
     private String content;

@@ -1,7 +1,7 @@
 package com.kusitms.hotsixServer.domain.place.service;
 
-import com.kusitms.hotsixServer.domain.place.dto.ResponsePlaceList;
-import com.kusitms.hotsixServer.domain.place.dto.RequestPlaceDto;
+import com.kusitms.hotsixServer.domain.place.dto.PlaceListDto;
+import com.kusitms.hotsixServer.domain.place.dto.req.CategoryPlaceReq;
 import com.kusitms.hotsixServer.domain.place.entity.Bookmark;
 import com.kusitms.hotsixServer.domain.place.entity.Category2;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
@@ -45,39 +45,39 @@ public class PlaceCategoryService {
 
     }
 
-    public ResponsePlaceList getPlacesByCategory1Response(Long Category1Id, RequestPlaceDto dto) {
+    public PlaceListDto getPlacesByCategory1Response(Long Category1Id, CategoryPlaceReq dto) {
         List<Place> places = getPlacesByCategory1(Category1Id, dto); //조건에 맞는 장소 List 출력
-        List<ResponsePlaceList.PlaceInfo> placeInfos = new ArrayList<>();
+        List<PlaceListDto.PlaceInfo> placeInfos = new ArrayList<>();
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow();
 
         for (Place place : places) {
-            ResponsePlaceList.PlaceInfo placeInfo = createPlaceInfo(place, user);
+            PlaceListDto.PlaceInfo placeInfo = createPlaceInfo(place, user);
             placeInfos.add(placeInfo);
         }
 
-        return ResponsePlaceList.builder()
+        return PlaceListDto.builder()
                 .places(placeInfos)
                 .build();
     }
 
 
-    public List<Place> getPlacesByCategory1(Long category1Id, RequestPlaceDto dto) {
+    public List<Place> getPlacesByCategory1(Long category1Id, CategoryPlaceReq dto) {
 
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); // User 조회
         Category2 category2 = category2Repository.findByName(dto.getCategory2()); //카테고리 2 값 조회
 
         int orderBy = 0;
-        if(String.valueOf(dto.getOrderBy())!= null){
+        if(String.valueOf(dto.getOrderBy())!= null){ // orderBy값 null이면 0으로 설정
             orderBy = dto.getOrderBy();
         } // orderBy값 null이면 0으로 설정
 
         Long category2Id = 0L;
         if (category2 != null){
             category2Id = category2.getId();
-        } //category2값 nul이면 0으로 설정
+        }
 
         String[] filters = dto.getFilters();
-        if (filters == null || filters.length == 0) { //선택한 filter값이 null이면 사용자 기본 필터값 가져오기
+        if (filters == null || filters.length == 0) {  //선택한 filter값이 null이면 사용자 기본 필터값 가져오기
             List<UserFilter> userFilters = userFilterRepository.findAllByUser(user);
 
             filters = userFilters.stream()
@@ -85,15 +85,16 @@ public class PlaceCategoryService {
                     .toArray(String[]::new);
         }
 
-        if(orderBy == 5){ // orderBy가 5면 별점 오름차순 (별점 낮은순)
+
+        if(orderBy == 5){  // orderBy가 5면 별점 오름차순 (별점 낮은순)
             return placeFilterRepository.findAllCategory1AndCategory2ASC(category1Id, category1Id, filters);
         } //나머지는 조건에 따라 내림차순
         return placeFilterRepository.findAllCategory1AndCategory2(category1Id, category2Id, orderBy, filters);
     }
 
 
-    private ResponsePlaceList.PlaceInfo createPlaceInfo(Place place, User user) {
-        return ResponsePlaceList.PlaceInfo.builder()
+    private PlaceListDto.PlaceInfo createPlaceInfo(Place place, User user) {
+        return PlaceListDto.PlaceInfo.builder()
                 .id(place.getId())
                 .name(place.getName())
                 .starRating(place.getStarRating())

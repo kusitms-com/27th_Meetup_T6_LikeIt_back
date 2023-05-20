@@ -1,6 +1,6 @@
 package com.kusitms.hotsixServer.domain.user.service;
 
-import com.kusitms.hotsixServer.domain.place.dto.PlaceDetail;
+import com.kusitms.hotsixServer.domain.place.dto.PlaceDetailDto;
 import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
 import com.kusitms.hotsixServer.domain.review.entity.Review;
 import com.kusitms.hotsixServer.domain.review.entity.ReviewSticker;
@@ -89,7 +89,7 @@ public class MyPageService {
             ReviewDto reviewDto = ReviewDto.from(review.getId(), review.getUser().getNickname(), review.getReviewImg(), review.getStarRating(), review.getContent()
             ,review.getLikeCount(), review.getDislikeCount(), getStickerNames(review));
             //장소 DTO
-            PlaceDetail.SimplePlaceInfo placeInfo = new PlaceDetail.SimplePlaceInfo(review.getPlace().getId(), review.getPlace().getName());
+            PlaceDetailDto.SimplePlaceInfo placeInfo = new PlaceDetailDto.SimplePlaceInfo(review.getPlace().getId(), review.getPlace().getName());
 
             ReviewDto.myReviewRes myReviewRes = ReviewDto.myReviewRes.from(reviewDto,placeInfo);
             myReviewResponses.add(myReviewRes);
