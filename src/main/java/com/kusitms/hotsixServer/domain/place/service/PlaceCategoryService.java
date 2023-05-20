@@ -69,7 +69,7 @@ public class PlaceCategoryService {
         int orderBy = 0;
         if(String.valueOf(dto.getOrderBy())!= null){ // orderBy값 null이면 0으로 설정
             orderBy = dto.getOrderBy();
-        } // orderBy값 null이면 0으로 설정
+        }
 
         Long category2Id = 0L;
         if (category2 != null){
