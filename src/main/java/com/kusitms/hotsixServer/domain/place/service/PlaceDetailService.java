@@ -1,6 +1,6 @@
 package com.kusitms.hotsixServer.domain.place.service;
 
-import com.kusitms.hotsixServer.domain.place.dto.PlaceDetail;
+import com.kusitms.hotsixServer.domain.place.dto.PlaceDetailDto;
 import com.kusitms.hotsixServer.domain.place.entity.Bookmark;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
 import com.kusitms.hotsixServer.domain.place.repository.BookmarkRepository;
@@ -42,7 +42,7 @@ public class PlaceDetailService {
         this.bookmarkRepository = bookmarkRepository;
         }
 
-    public PlaceDetail getPlaceDetail(Long placeId) {
+    public PlaceDetailDto getPlaceDetail(Long placeId) {
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow();
         Place place = placeRepository.findById(placeId).orElseThrow();
         List<Review> reviews = reviewRepository.findByPlaceId(placeId);
@@ -65,7 +65,7 @@ public class PlaceDetailService {
         int[] top2PositiveStickerCount = getStickerCounts(place, true);
         int[] top2NegativeStickerCount = getStickerCounts(place, false);
 
-        PlaceDetail.PlaceInfo placeInfo = PlaceDetail.PlaceInfo.builder()
+        PlaceDetailDto.PlaceInfo placeInfo = PlaceDetailDto.PlaceInfo.builder()
                 .id(place.getId())
                 .name(place.getName())
                 .starRating(place.getStarRating())
@@ -80,7 +80,7 @@ public class PlaceDetailService {
                 .reviews(reviewInfos)
                 .build();
 
-        return PlaceDetail.builder()
+        return PlaceDetailDto.builder()
                 .places(Collections.singletonList(placeInfo))
                 .build();
     }

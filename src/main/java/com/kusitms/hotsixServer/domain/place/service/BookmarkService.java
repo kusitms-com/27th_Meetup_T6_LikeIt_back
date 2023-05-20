@@ -35,9 +35,11 @@ public class BookmarkService {
         if (bookmark == null) {
             bookmark = new Bookmark(user, place);
             bookmarkRepository.save(bookmark);
+            place.setBookmarkCount(place.getBookmarkCount() + 1);
             return PlaceConstants.EBoardResponseMessage.RESPONSE_ADD_BOOKMARK_SUCCESS.getMessage();
         } else {
             bookmarkRepository.delete(bookmark);
+            place.setBookmarkCount(place.getBookmarkCount() - 1);
             return PlaceConstants.EBoardResponseMessage.RESPONSE_DELETE_BOOKMARK_SUCCESS.getMessage();
         }
     }
