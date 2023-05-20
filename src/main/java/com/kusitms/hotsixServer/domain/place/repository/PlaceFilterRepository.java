@@ -35,16 +35,17 @@ public interface PlaceFilterRepository extends JpaRepository<PlaceFilter, Long> 
                                              @Param("orderBy") int orderBy,
                                              @Param("filters") String[] filters);
 
+
     @Query("SELECT pf.place FROM PlaceFilter pf " +
             "JOIN pf.filter f JOIN pf.place p JOIN p.category1 c1 JOIN p.category2 c2 " +
             "WHERE f.name IN :filters AND c1.id = :category1Id " +
             "AND (:category2Id = 0L OR c2.id = :category2Id) " +
             "GROUP BY pf.place " +
-            "ORDER BY p.starRating DESC")
+            "ORDER BY " +
+            "p.starRating ASC")
     List<Place> findAllCategory1AndCategory2ASC(@Param("category1Id") Long category1Id,
-                                                @Param("category2Id") Long category2Id,
-                                                @Param("filters") String[] filters);
-
+                                             @Param("category2Id") Long category2Id,
+                                             @Param("filters") String[] filters);
 
 
 }
