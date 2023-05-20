@@ -4,41 +4,46 @@ import com.kusitms.hotsixServer.domain.place.dto.PlaceDetail;
 import lombok.*;
 
 
-@Getter
-@Builder
+
 public class ReviewDto {
 
-    private Long id;
-    private String username;
-    private String img;
-    private float starRating;
-    private String content;
-    private int likeCount;
-    private int dislikeCount;
-    private String[] stickers;
+    @Getter
+    @Builder
+    public static class reviewRes {
+        private Long id;
+        private String username;
+        private String img;
+        private float starRating;
+        private String content;
+        private int likeCount;
+        private int dislikeCount;
+        private String[] stickers;
 
-    public static ReviewDto from(Long id, String name, String img, float starRating, String content, int likeCount, int dislikeCount, String[] stickers){
-        return ReviewDto.builder()
-                .id(id)
-                .username(name)
-                .img(img)
-                .starRating(starRating)
-                .content(content)
-                .likeCount(likeCount)
-                .dislikeCount(dislikeCount)
-                .stickers(stickers)
-                .build();
+
+        public static reviewRes from(Long id, String name, String img, float starRating, String content, int likeCount, int dislikeCount, String[] stickers){
+            return reviewRes.builder()
+                    .id(id)
+                    .username(name)
+                    .img(img)
+                    .starRating(starRating)
+                    .content(content)
+                    .likeCount(likeCount)
+                    .dislikeCount(dislikeCount)
+                    .stickers(stickers)
+                    .build();
+        }
     }
+
     @Getter
     @Builder
     public static class myReviewRes {
-        private ReviewDto reviewDto;
-        private PlaceDetail.SimplePlaceInfo placeInfo;
+        private reviewRes reviewRes;
+        private PlaceDetail.SimplePlaceRes placeRes;
 
-        public static myReviewRes from (ReviewDto reviewDto, PlaceDetail.SimplePlaceInfo placeInfo) {
+        public static myReviewRes from (reviewRes reviewRes, PlaceDetail.SimplePlaceRes placeInfo) {
            return myReviewRes.builder()
-                   .reviewDto(reviewDto)
-                   .placeInfo(placeInfo)
+                   .reviewRes(reviewRes)
+                   .placeRes(placeInfo)
                    .build();
         }
 

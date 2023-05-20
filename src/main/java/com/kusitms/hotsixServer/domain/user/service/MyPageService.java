@@ -86,10 +86,10 @@ public class MyPageService {
 
         for (Review review : reviewList) {
             //리뷰 DTO
-            ReviewDto reviewDto = ReviewDto.from(review.getId(), review.getUser().getNickname(), review.getReviewImg(), review.getStarRating(), review.getContent()
+            ReviewDto.reviewRes reviewDto = ReviewDto.reviewRes.from(review.getId(), review.getUser().getNickname(), review.getReviewImg(), review.getStarRating(), review.getContent()
             ,review.getLikeCount(), review.getDislikeCount(), getStickerNames(review));
             //장소 DTO
-            PlaceDetail.SimplePlaceInfo placeInfo = new PlaceDetail.SimplePlaceInfo(review.getPlace().getId(), review.getPlace().getName());
+            PlaceDetail.SimplePlaceRes placeInfo = new PlaceDetail.SimplePlaceRes(review.getPlace().getId(), review.getPlace().getName());
 
             ReviewDto.myReviewRes myReviewRes = ReviewDto.myReviewRes.from(reviewDto,placeInfo);
             myReviewResponses.add(myReviewRes);

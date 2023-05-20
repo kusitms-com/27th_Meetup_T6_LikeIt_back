@@ -26,14 +26,14 @@ public class PlaceDetail {
         private int[] top2PositiveStickerCount;
         private int[] top2NegativeStickerCount;
         private char isBookmarked;
-        private List<ReviewDto> reviews;
+        private List<ReviewDto.reviewRes> reviews;
 
     }
 
     @NoArgsConstructor
     @AllArgsConstructor
     @Getter
-    public static class SimplePlaceInfo {
+    public static class SimplePlaceRes {
         private Long id;
         private String name;
     }
