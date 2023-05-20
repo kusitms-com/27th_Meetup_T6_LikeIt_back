@@ -38,6 +38,14 @@ public class PlaceDetail {
         private String name;
     }
 
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    public static class SimplePlaceRes2 {
+        private Long id;
+        private String name;
+        private String img;
+    }
 
 
 }

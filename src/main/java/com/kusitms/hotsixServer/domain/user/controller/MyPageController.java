@@ -1,5 +1,6 @@
 package com.kusitms.hotsixServer.domain.user.controller;
 
+import com.kusitms.hotsixServer.domain.place.dto.PlaceDetail;
 import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
 import com.kusitms.hotsixServer.domain.user.constant.UserConstants;
 import com.kusitms.hotsixServer.domain.user.dto.req.FilterDtoReq;
@@ -52,6 +53,14 @@ public class MyPageController {
         return ResponseEntity.ok(ResponseDto.create(
                 UserConstants.EBoardResponseMessage.GET_USERREVIEW_SUCCESS.getMessage(),
                 this.myPageService.getReviews()));
+    }
+
+    @ApiOperation("북마크")
+    @GetMapping("/bookmark")
+    public ResponseEntity<ResponseDto<List<PlaceDetail.SimplePlaceRes2>>> getBookmark(){
+        return ResponseEntity.ok(ResponseDto.create(
+                UserConstants.EBoardResponseMessage.GET_USERBOOKMARK_SUCCESS.getMessage(),
+                this.myPageService.getBookmark()));
     }
 
 }
