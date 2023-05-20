@@ -1,13 +1,9 @@
 package com.kusitms.hotsixServer.domain.user.service;
 
-<<<<<<< HEAD
-import com.kusitms.hotsixServer.domain.place.dto.PlaceDetail;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
 import com.kusitms.hotsixServer.domain.place.repository.BookmarkRepository;
 import com.kusitms.hotsixServer.domain.place.repository.PlaceRepository;
-=======
 import com.kusitms.hotsixServer.domain.place.dto.PlaceDetailDto;
->>>>>>> main
 import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
 import com.kusitms.hotsixServer.domain.review.entity.Review;
 import com.kusitms.hotsixServer.domain.review.entity.ReviewSticker;
