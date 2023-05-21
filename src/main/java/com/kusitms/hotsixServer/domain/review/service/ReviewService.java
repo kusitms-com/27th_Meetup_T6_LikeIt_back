@@ -96,8 +96,9 @@ public class ReviewService {
         Optional<Review> optionalReview = reviewRepository.findById(reviewId);
         if (optionalReview.isPresent()) {
             Review review = optionalReview.get();
-            int likeCount = review.getLikeCount();
-            review.setLikeCount(likeCount - 1);
+            int disLikeCount = review.getDislikeCount();
+            review.setDislikeCount(disLikeCount + 1);
+
         }
     }
 
