@@ -30,6 +30,9 @@ public class Place extends BaseTimeEntity {
     @Column(name = "place_img", columnDefinition = "TEXT", nullable = false)
     private String placeImg;
 
+    @Column(name = "star_Total")
+    private int starTotal;
+
     @Column(name = "star_rating")
     private float starRating;
 

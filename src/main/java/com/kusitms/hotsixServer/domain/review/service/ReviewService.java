@@ -46,7 +46,12 @@ public class ReviewService {
         Review review = Review.createReview(user, place, imgPath, dto);
 
         reviewRepository.save(review);
+        place.setStarTotal(place.getStarTotal()+dto.getStarRating());
         place.setReviewCount(place.getReviewCount() + 1);
+
+        float starRating = (float) place.getStarTotal() / place.getReviewCount();
+        place.setStarRating((float) (Math.floor(starRating * 10) / 10));
+
 
         String[] stickers = dto.getStickers();
         for (String stickerName : stickers) {
@@ -64,8 +69,14 @@ public class ReviewService {
         if (optionalReview.isPresent()) {
             Review review = optionalReview.get();
             Place place = review.getPlace();
+
+
             reviewRepository.delete(review);
+            place.setStarTotal(place.getStarTotal() - review.getStarRating());
             place.setReviewCount(place.getReviewCount() - 1);
+
+            float starRating = (float) place.getStarTotal() / place.getReviewCount();
+            place.setStarRating((float) (Math.floor(starRating * 10) / 10));
         }
     }
 
