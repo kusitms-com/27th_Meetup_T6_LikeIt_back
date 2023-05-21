@@ -16,8 +16,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("SELECT r FROM Review r JOIN FETCH r.place WHERE r.user = :user ORDER BY r.modifiedAt ASC")
     List<Review> findMyReview(@Param("user") User user);
 
-    List<Review> findAllByUserOrderByModifiedAt(User user);
-
     @Query("SELECT rs.sticker.name, COUNT(rs) AS stickerCount FROM ReviewSticker rs WHERE rs.review.place = :place GROUP BY rs.sticker ORDER BY stickerCount DESC")
     List<Object[]> findTopStickersByPlace(@Param("place") Place place, Pageable pageable);
 

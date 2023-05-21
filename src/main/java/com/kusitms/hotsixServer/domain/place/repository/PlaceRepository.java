@@ -12,8 +12,6 @@ import java.util.List;
 
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
-    List<Place> findByCategory1(Category1 category1);
-
     @Query(value = "select distinct p.* " +
             "from places p " +
             "         join place_filter pf on p.place_id = pf.place_id " +
