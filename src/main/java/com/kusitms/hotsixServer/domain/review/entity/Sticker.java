@@ -23,4 +23,7 @@ public class Sticker {
     //스티커 긍/부정 변수 ->  Y/N
     @Column(name = "is_positive", nullable = false)
     private char isPositive;
+
+    @Column(name = "url", nullable = false)
+    private String url;
 }
