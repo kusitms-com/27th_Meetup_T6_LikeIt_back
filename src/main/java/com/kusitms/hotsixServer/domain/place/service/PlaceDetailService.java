@@ -64,13 +64,12 @@ public class PlaceDetailService {
         String[] top2NegativeStickers = getTopNegativeStickers(place);
         int[] top2PositiveStickerCount = getStickerCounts(place, true);
         int[] top2NegativeStickerCount = getStickerCounts(place, false);
-        float starRating = place.getStarRating() / place.getReviewCount();
-        float formattedRating = (float) (Math.floor(starRating * 10) / 10);
+
 
         PlaceDetailDto.PlaceInfo placeInfo = PlaceDetailDto.PlaceInfo.builder()
                 .id(place.getId())
                 .name(place.getName())
-                .starRating(formattedRating)
+                .starRating(place.getStarRating())
                 .content(place.getContent())
                 .placeImg(place.getPlaceImg())
                 .reviewCount(reviews.size())

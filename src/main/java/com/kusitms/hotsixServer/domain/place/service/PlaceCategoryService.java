@@ -94,12 +94,10 @@ public class PlaceCategoryService {
 
 
     private PlaceListDto.PlaceInfo createPlaceInfo(Place place, User user) {
-        float starRating = place.getStarRating() / place.getReviewCount();
-        float formattedRating = (float) (Math.floor(starRating * 10) / 10);
         return PlaceListDto.PlaceInfo.builder()
                 .id(place.getId())
                 .name(place.getName())
-                .starRating(formattedRating)
+                .starRating(place.getStarRating())
                 .reviewCount(place.getReviewCount())
                 .placeImg(place.getPlaceImg())
                 .content(place.getContent())
