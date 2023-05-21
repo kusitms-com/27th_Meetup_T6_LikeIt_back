@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface StickerRepository extends JpaRepository<Sticker, Long> {
     Optional<Sticker> findByName(String name);
 
-    @Query(value = "select s.name as sticker, s.is_positive as isPositive from stickers s " +
+    @Query(value = "select s.sticker_id as id, s.name as sticker, s.url as url from stickers s " +
             "    join review_sticker rs on s.sticker_id = rs.sticker_id " +
             "    join reviews r on r.review_id = rs.review_id " +
             "where r.place_id= :id group by rs.sticker_id order by count(rs.sticker_id) limit 2", nativeQuery = true)
