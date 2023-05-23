@@ -1,5 +1,6 @@
 package com.kusitms.hotsixServer.domain.place.dto;
 
+import com.kusitms.hotsixServer.domain.main.dto.res.GetStickerRes;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,7 +20,7 @@ public class PlaceListDto {
         private String placeImg;
         private String content;
         private String openingHours;
-        private String[] top2Stickers;
         private char isBookmarked;
+        private List<GetStickerRes> top2stickers;
     }
 }

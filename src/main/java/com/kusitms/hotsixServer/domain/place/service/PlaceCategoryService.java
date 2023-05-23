@@ -1,5 +1,6 @@
 package com.kusitms.hotsixServer.domain.place.service;
 
+import com.kusitms.hotsixServer.domain.main.dto.res.GetStickerRes;
 import com.kusitms.hotsixServer.domain.place.dto.PlaceListDto;
 import com.kusitms.hotsixServer.domain.place.dto.req.CategoryPlaceReq;
 import com.kusitms.hotsixServer.domain.place.entity.Bookmark;
@@ -8,13 +9,12 @@ import com.kusitms.hotsixServer.domain.place.entity.Place;
 import com.kusitms.hotsixServer.domain.place.repository.BookmarkRepository;
 import com.kusitms.hotsixServer.domain.place.repository.Category2Repository;
 import com.kusitms.hotsixServer.domain.place.repository.PlaceFilterRepository;
-import com.kusitms.hotsixServer.domain.review.repository.ReviewRepository;
+import com.kusitms.hotsixServer.domain.review.repository.StickerRepository;
 import com.kusitms.hotsixServer.domain.user.entity.User;
 import com.kusitms.hotsixServer.domain.user.entity.UserFilter;
 import com.kusitms.hotsixServer.domain.user.repository.UserFilterRepository;
 import com.kusitms.hotsixServer.domain.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,17 +31,17 @@ public class PlaceCategoryService {
     private final PlaceFilterRepository placeFilterRepository;
     private final UserRepository userRepository;
     private final UserFilterRepository userFilterRepository;
-    private final ReviewRepository reviewRepository;
+    private final StickerRepository stickerRepository;
     private final BookmarkRepository bookmarkRepository;
 
     public PlaceCategoryService(Category2Repository category2Repository, PlaceFilterRepository placeFilterRepository, UserRepository userRepository,
-                                ReviewRepository reviewRepository, BookmarkRepository bookmarkRepository, UserFilterRepository userFilterRepository) {
+                                BookmarkRepository bookmarkRepository, UserFilterRepository userFilterRepository, StickerRepository stickerRepository) {
         this.category2Repository = category2Repository;
         this.placeFilterRepository = placeFilterRepository;
         this.userRepository = userRepository;
-        this.reviewRepository = reviewRepository;
         this.bookmarkRepository = bookmarkRepository;
         this.userFilterRepository = userFilterRepository;
+        this.stickerRepository = stickerRepository;
 
     }
 
@@ -94,6 +94,8 @@ public class PlaceCategoryService {
 
 
     private PlaceListDto.PlaceInfo createPlaceInfo(Place place, User user) {
+        List<GetStickerRes> stickerList = stickerRepository.findTop2Stickers(place.getId());
+
         return PlaceListDto.PlaceInfo.builder()
                 .id(place.getId())
                 .name(place.getName())
@@ -102,23 +104,11 @@ public class PlaceCategoryService {
                 .placeImg(place.getPlaceImg())
                 .content(place.getContent())
                 .openingHours(place.getOpeningHours())
-                .top2Stickers(findTop2StickersByPlace(place))
+                .top2stickers(stickerList)
                 .isBookmarked(checkBookmark(user, place))
                 .build();
     }
 
-    private String[] findTop2StickersByPlace(Place place) {
-        List<Object[]> result = reviewRepository.findTopStickersByPlace(place, PageRequest.of(0, 2));
-        String[] topStickers = new String[result.size()];
-
-        for (int i = 0; i < result.size(); i++) {
-            Object[] row = result.get(i);
-            String stickerName = (String) row[0];
-            topStickers[i] = stickerName;
-        }
-
-        return topStickers;
-    }
     public char checkBookmark(User user, Place place){
         Bookmark bookmark = bookmarkRepository.findByUserAndPlace(user, place);
         if (bookmark == null) {
