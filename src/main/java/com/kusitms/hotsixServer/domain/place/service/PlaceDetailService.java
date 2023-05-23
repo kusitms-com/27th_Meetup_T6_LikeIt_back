@@ -1,5 +1,6 @@
 package com.kusitms.hotsixServer.domain.place.service;
 
+import com.kusitms.hotsixServer.domain.main.dto.res.GetStickerRes;
 import com.kusitms.hotsixServer.domain.place.dto.PlaceDetailDto;
 import com.kusitms.hotsixServer.domain.place.entity.Bookmark;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
@@ -10,6 +11,7 @@ import com.kusitms.hotsixServer.domain.review.entity.Review;
 import com.kusitms.hotsixServer.domain.review.entity.ReviewSticker;
 import com.kusitms.hotsixServer.domain.review.repository.ReviewRepository;
 import com.kusitms.hotsixServer.domain.review.repository.ReviewStickerRepository;
+import com.kusitms.hotsixServer.domain.review.repository.StickerRepository;
 import com.kusitms.hotsixServer.domain.user.entity.User;
 import com.kusitms.hotsixServer.domain.user.repository.UserRepository;
 import com.kusitms.hotsixServer.global.error.BaseException;
@@ -31,14 +33,16 @@ public class PlaceDetailService {
     private final ReviewRepository reviewRepository;
     private final ReviewStickerRepository reviewStickerRepository;
     private final UserRepository userRepository;
+    private final StickerRepository stickerRepository;
     private final BookmarkRepository bookmarkRepository;
 
     public PlaceDetailService(PlaceRepository placeRepository, ReviewRepository reviewRepository, ReviewStickerRepository reviewStickerRepository,
-                              UserRepository userRepository, BookmarkRepository bookmarkRepository) {
+                              UserRepository userRepository, BookmarkRepository bookmarkRepository, StickerRepository stickerRepository) {
         this.placeRepository = placeRepository;
         this.reviewRepository = reviewRepository;
         this.reviewStickerRepository = reviewStickerRepository;
         this.userRepository = userRepository;
+        this.stickerRepository =stickerRepository;
         this.bookmarkRepository = bookmarkRepository;
         }
 
@@ -56,7 +60,7 @@ public class PlaceDetailService {
         for (Review review : reviews) {
             ReviewDto.reviewRes reviewInfo = ReviewDto.reviewRes.from(review.getId(), review.getUser().getNickname(),
                     review.getReviewImg(), review.getStarRating(), review.getContent(),
-                    review.getLikeCount(),review.getDislikeCount(),getStickerNames(review));
+                    review.getLikeCount(),review.getDislikeCount(),StickerInfo(review));
             reviewInfos.add(reviewInfo);
         }
 
@@ -84,6 +88,10 @@ public class PlaceDetailService {
         return PlaceDetailDto.builder()
                 .places(Collections.singletonList(placeInfo))
                 .build();
+    }
+
+    public List<GetStickerRes> StickerInfo(Review review){
+        return stickerRepository.findStickers(review.getId());
     }
 
     public String[] getStickerNames(Review review) {
