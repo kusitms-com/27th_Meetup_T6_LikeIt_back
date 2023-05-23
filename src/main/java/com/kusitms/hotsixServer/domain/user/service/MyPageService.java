@@ -1,5 +1,6 @@
 package com.kusitms.hotsixServer.domain.user.service;
 
+import com.kusitms.hotsixServer.domain.main.dto.res.GetStickerRes;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
 import com.kusitms.hotsixServer.domain.place.repository.BookmarkRepository;
 import com.kusitms.hotsixServer.domain.place.repository.PlaceRepository;
@@ -8,6 +9,7 @@ import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
 import com.kusitms.hotsixServer.domain.review.entity.Review;
 import com.kusitms.hotsixServer.domain.review.entity.ReviewSticker;
 import com.kusitms.hotsixServer.domain.review.repository.ReviewRepository;
+import com.kusitms.hotsixServer.domain.review.repository.StickerRepository;
 import com.kusitms.hotsixServer.domain.user.dto.req.FilterDtoReq;
 import com.kusitms.hotsixServer.domain.user.dto.UserDto;
 import com.kusitms.hotsixServer.domain.user.entity.Filter;
@@ -45,7 +47,7 @@ public class MyPageService {
 
     private final FilterRepository filterRepository;
 
-    private final BookmarkRepository bookmarkRepository;
+    private final StickerRepository stickerRepository;
 
     private final PlaceRepository placeRepository;
 
@@ -94,7 +96,7 @@ public class MyPageService {
         for (Review review : reviewList) {
             //리뷰 DTO
             ReviewDto.reviewRes reviewDto = ReviewDto.reviewRes.from(review.getId(), review.getUser().getNickname(), review.getReviewImg(), review.getStarRating(), review.getContent()
-                    , review.getLikeCount(), review.getDislikeCount(), getStickerNames(review));
+                    , review.getLikeCount(), review.getDislikeCount(), StickerInfo(review));
             //장소 DTO
             PlaceDetailDto.SimplePlaceRes placeInfo = new PlaceDetailDto.SimplePlaceRes(review.getPlace().getId(), review.getPlace().getName());
 
@@ -106,17 +108,8 @@ public class MyPageService {
 
     }
 
-    public String[] getStickerNames(Review review) {
-        List<ReviewSticker> reviewStickers = review.getReviewStickers();
-        String[] stickerNames = new String[reviewStickers.size()];
-
-        for (int i = 0; i < reviewStickers.size(); i++) {
-            ReviewSticker reviewSticker = reviewStickers.get(i);
-            String stickerName = reviewSticker.getSticker().getName();
-            stickerNames[i] = stickerName;
-        }
-
-        return stickerNames;
+    public List<GetStickerRes> StickerInfo(Review review){
+        return stickerRepository.findStickers(review.getId());
     }
 
     public void updateFilters(FilterDtoReq dto) {

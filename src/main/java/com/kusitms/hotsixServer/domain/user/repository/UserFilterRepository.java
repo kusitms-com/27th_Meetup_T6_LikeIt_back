@@ -15,5 +15,7 @@ public interface UserFilterRepository extends JpaRepository<UserFilter, Long> {
 
     List<UserFilter> findAllByUser(User user);
 
+    boolean existsByUser(User user);
+
     void deleteAllByUser(User user);
 }

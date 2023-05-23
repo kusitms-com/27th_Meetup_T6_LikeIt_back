@@ -1,8 +1,10 @@
 package com.kusitms.hotsixServer.domain.review.dto;
 
+import com.kusitms.hotsixServer.domain.main.dto.res.GetStickerRes;
 import com.kusitms.hotsixServer.domain.place.dto.PlaceDetailDto;
 import lombok.*;
 
+import java.util.List;
 
 
 public class ReviewDto {
@@ -17,10 +19,10 @@ public class ReviewDto {
         private String content;
         private int likeCount;
         private int dislikeCount;
-        private String[] stickers;
+        private List<GetStickerRes> stickers;
 
 
-        public static reviewRes from(Long id, String name, String img, float starRating, String content, int likeCount, int dislikeCount, String[] stickers){
+        public static reviewRes from(Long id, String name, String img, float starRating, String content, int likeCount, int dislikeCount, List<GetStickerRes> stickers){
             return reviewRes.builder()
                     .id(id)
                     .username(name)
