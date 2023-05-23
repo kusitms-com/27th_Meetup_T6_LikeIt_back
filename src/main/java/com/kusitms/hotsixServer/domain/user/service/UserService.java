@@ -19,8 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
 
 import static com.kusitms.hotsixServer.global.config.SecurityUtil.getCurrentUserEmail;
-import static com.kusitms.hotsixServer.global.error.ErrorCode.SET_FILTER_ERROR;
-import static com.kusitms.hotsixServer.global.error.ErrorCode.Token_Error;
+import static com.kusitms.hotsixServer.global.error.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -57,6 +56,7 @@ public class UserService {
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow();
 
         if(dto.getFilters().length>2) throw new BaseException(SET_FILTER_ERROR);
+        if(userFilterRepository.existsByUser(user)) throw new BaseException(FILTER_ALREADY_EXIST);
 
         for(int i=0; i<dto.getFilters().length; i++){
             Filter getFilter = filterRepository.findByName(dto.getFilters()[i]).orElseThrow();
