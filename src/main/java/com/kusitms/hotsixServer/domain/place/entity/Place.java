@@ -4,6 +4,8 @@ import com.kusitms.hotsixServer.global.common.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -52,5 +54,11 @@ public class Place extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category2_id", referencedColumnName = "category2_id")
     private Category2 category2;
+
+    @OneToMany(mappedBy = "place",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PlaceFilter> placeFilters = new ArrayList<>();
+
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Bookmark> bookmarks = new ArrayList<>();
 
 }
