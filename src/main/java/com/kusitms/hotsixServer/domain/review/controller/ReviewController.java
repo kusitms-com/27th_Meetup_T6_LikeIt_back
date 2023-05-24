@@ -1,7 +1,7 @@
 package com.kusitms.hotsixServer.domain.review.controller;
 
 import com.kusitms.hotsixServer.domain.review.constant.ReviewConstants;
-import com.kusitms.hotsixServer.domain.review.dto.RequestReviewDto;
+import com.kusitms.hotsixServer.domain.review.dto.req.ReviewReq;
 import com.kusitms.hotsixServer.domain.review.service.ReviewService;
 import com.kusitms.hotsixServer.global.dto.ResponseDto;
 import io.swagger.annotations.ApiOperation;
@@ -21,7 +21,7 @@ public class ReviewController {
 
     @ApiOperation("리뷰 작성 코드")
     @PostMapping(value = "/write", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ResponseDto> createReview(@RequestPart RequestReviewDto reviewDto,
+    public ResponseEntity<ResponseDto> createReview(@RequestPart ReviewReq reviewDto,
                                                     @RequestPart MultipartFile reviewImg) {
         reviewService.createReview(reviewDto, reviewImg);
         return ResponseEntity.ok(ResponseDto.create(

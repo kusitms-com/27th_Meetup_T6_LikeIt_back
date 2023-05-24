@@ -1,4 +1,4 @@
-package com.kusitms.hotsixServer.domain.place.dto;
+package com.kusitms.hotsixServer.domain.place.dto.res;
 
 
 import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
@@ -8,9 +8,9 @@ import java.util.List;
 
 @Data
 @Builder
-public class PlaceDetailDto {
+public class PlaceDetailRes {
 
-    private List<PlaceDetailDto.PlaceInfo> places;
+    private List<PlaceDetailRes.PlaceInfo> places;
 
     @Data
     @Builder

@@ -1,15 +1,14 @@
-package com.kusitms.hotsixServer.domain.place.dto;
+package com.kusitms.hotsixServer.domain.place.dto.res;
 
 import com.kusitms.hotsixServer.domain.main.dto.res.StickerRes;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
-import com.kusitms.hotsixServer.domain.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 @Data
 @Builder
-public class PlaceListDto {
+public class CategoryPlaceRes {
     private List<PlaceInfo> places;
 
     @Data

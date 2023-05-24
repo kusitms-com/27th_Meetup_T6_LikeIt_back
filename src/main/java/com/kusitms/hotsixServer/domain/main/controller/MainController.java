@@ -5,9 +5,7 @@ import com.kusitms.hotsixServer.domain.main.dto.req.SearchReq;
 import com.kusitms.hotsixServer.domain.main.dto.res.PlaceBookmarkRes;
 import com.kusitms.hotsixServer.domain.main.dto.res.PlaceFilterRes;
 import com.kusitms.hotsixServer.domain.main.service.MainService;
-import com.kusitms.hotsixServer.domain.place.dto.PlaceListDto;
-import com.kusitms.hotsixServer.domain.place.dto.req.CategoryPlaceReq;
-import com.kusitms.hotsixServer.domain.place.entity.Place;
+import com.kusitms.hotsixServer.domain.place.dto.res.CategoryPlaceRes;
 import com.kusitms.hotsixServer.global.dto.ResponseDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +42,7 @@ public class MainController {
 
     @ApiOperation("검색")
     @GetMapping(value="/places/search")
-    public ResponseEntity<ResponseDto<List<PlaceListDto.PlaceInfo>>> getPlacesBySearch(@RequestBody SearchReq req){
+    public ResponseEntity<ResponseDto<List<CategoryPlaceRes.PlaceInfo>>> getPlacesBySearch(@RequestBody SearchReq req){
         return ResponseEntity.ok(ResponseDto.create(
                 MainConstants.EBoardResponseMessage.PLACES_RESPONSE_SUCCESS.getMessage(),
                 this.mainService.getPlacesBySearch(req)));

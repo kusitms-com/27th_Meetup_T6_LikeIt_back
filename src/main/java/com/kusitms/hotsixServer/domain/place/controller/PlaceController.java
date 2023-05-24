@@ -2,8 +2,8 @@ package com.kusitms.hotsixServer.domain.place.controller;
 
 
 import com.kusitms.hotsixServer.domain.place.constant.PlaceConstants;
-import com.kusitms.hotsixServer.domain.place.dto.PlaceListDto;
-import com.kusitms.hotsixServer.domain.place.dto.PlaceDetailDto;
+import com.kusitms.hotsixServer.domain.place.dto.res.CategoryPlaceRes;
+import com.kusitms.hotsixServer.domain.place.dto.res.PlaceDetailRes;
 import com.kusitms.hotsixServer.domain.place.dto.req.CategoryPlaceReq;
 import com.kusitms.hotsixServer.domain.place.service.PlaceCategoryService;
 import com.kusitms.hotsixServer.domain.place.service.PlaceDetailService;
@@ -27,8 +27,8 @@ public class PlaceController {
 
     @ApiOperation("음식점 선택시 메인 화면")
     @PostMapping("/list/restaurant")
-    public ResponseEntity<ResponseDto<PlaceListDto>> getPlacesByRestaurant(@RequestBody CategoryPlaceReq dto) {
-        PlaceListDto placeResponse = placeCategoryService.getPlacesByCategory1Response(1L, dto);
+    public ResponseEntity<ResponseDto<CategoryPlaceRes>> getPlacesByRestaurant(@RequestBody CategoryPlaceReq dto) {
+        CategoryPlaceRes placeResponse = placeCategoryService.getPlacesByCategory1Response(1L, dto);
 
         return ResponseEntity.ok(ResponseDto.create(
                 PlaceConstants.EBoardResponseMessage.RESPONSE_PLACE_RESTAURANT_SUCCESS.getMessage(),
@@ -37,8 +37,8 @@ public class PlaceController {
 
     @ApiOperation("카페 선택시 메인 화면")
     @PostMapping("/list/cafe")
-    public ResponseEntity<ResponseDto<PlaceListDto>> getPlacesByCafe(@RequestBody CategoryPlaceReq dto) {
-        PlaceListDto placeResponse = placeCategoryService.getPlacesByCategory1Response(2L, dto);
+    public ResponseEntity<ResponseDto<CategoryPlaceRes>> getPlacesByCafe(@RequestBody CategoryPlaceReq dto) {
+        CategoryPlaceRes placeResponse = placeCategoryService.getPlacesByCategory1Response(2L, dto);
 
         return ResponseEntity.ok(ResponseDto.create(
                 PlaceConstants.EBoardResponseMessage.RESPONSE_PLACE_CAFE_SUCCESS.getMessage(),
@@ -47,8 +47,8 @@ public class PlaceController {
 
     @ApiOperation("놀거리 선택시 메인 화면")
     @PostMapping("/list/activity")
-    public ResponseEntity<ResponseDto<PlaceListDto>> getPlacesByActivity(@RequestBody CategoryPlaceReq dto) {
-        PlaceListDto placeResponse = placeCategoryService.getPlacesByCategory1Response(3L, dto);
+    public ResponseEntity<ResponseDto<CategoryPlaceRes>> getPlacesByActivity(@RequestBody CategoryPlaceReq dto) {
+        CategoryPlaceRes placeResponse = placeCategoryService.getPlacesByCategory1Response(3L, dto);
 
         return ResponseEntity.ok(ResponseDto.create(
                 PlaceConstants.EBoardResponseMessage.RESPONSE_PLACE_ACTIVITY_SUCCESS.getMessage(),
@@ -57,11 +57,11 @@ public class PlaceController {
 
     @ApiOperation("장소 상세 정보 조회")
     @GetMapping("/detail/{placeId}")
-    public ResponseEntity<ResponseDto<PlaceDetailDto>> getPlaceDetail(@PathVariable("placeId") Long placeId) {
-        PlaceDetailDto placeDetailDto = placeDetailService.getPlaceDetail(placeId);
+    public ResponseEntity<ResponseDto<PlaceDetailRes>> getPlaceDetail(@PathVariable("placeId") Long placeId) {
+        PlaceDetailRes placeDetailRes = placeDetailService.getPlaceDetail(placeId);
 
         return ResponseEntity.ok(ResponseDto.create(
                 PlaceConstants.EBoardResponseMessage.RESPONSE_PLACE_DETAIL_SUCCESS.getMessage(),
-                placeDetailDto));
+                placeDetailRes));
     }
 }
