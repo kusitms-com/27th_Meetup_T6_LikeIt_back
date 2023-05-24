@@ -1,12 +1,15 @@
 package com.kusitms.hotsixServer.domain.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kusitms.hotsixServer.domain.place.entity.Bookmark;
 import com.kusitms.hotsixServer.domain.user.dto.GoogleUser;
 import com.kusitms.hotsixServer.global.common.BaseTimeEntity;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,6 +44,10 @@ public class User extends BaseTimeEntity {
     @JsonIgnore
     @Column(name="password")
     private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserFilter> userFilters = new ArrayList<>();
+
 
     @Builder
     public User(GoogleUser googleUser, PasswordEncoder passwordEncoder){

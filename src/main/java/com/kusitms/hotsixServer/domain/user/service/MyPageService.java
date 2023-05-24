@@ -125,7 +125,7 @@ public class MyPageService {
     public List<PlaceDetailRes.SimplePlaceRes2> getBookmark() {
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
 
-        List<Place> placeList = placeRepository.findForBookmark(user.getId());
+        List<Place> placeList = placeRepository.findForBookmark(user);
         List<PlaceDetailRes.SimplePlaceRes2> result = new ArrayList<>();
         for (Place place : placeList) {
             PlaceDetailRes.SimplePlaceRes2 placeInfo = new PlaceDetailRes.SimplePlaceRes2(place.getId(),place.getName(),place.getPlaceImg());

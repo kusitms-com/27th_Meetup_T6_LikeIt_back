@@ -13,11 +13,14 @@ import com.kusitms.hotsixServer.domain.user.entity.User;
 import com.kusitms.hotsixServer.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +39,8 @@ public class MainService {
 
     public List<PlaceFilterRes> getPlacesByFilter(){
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
-        List<Place> placeList = placeRepository.findByFilterInMain(user.getId());
+        Pageable pageable = PageRequest.of(0, 7);
+        List<Place> placeList = placeRepository.findByFilterInMain(user,pageable);
         List<PlaceFilterRes> result = new ArrayList<>();
 
         for(Place place:placeList){
@@ -50,19 +54,20 @@ public class MainService {
     }
 
     public PlaceBookmarkRes getTopBookmark() {
-        LocalDate currentDate = LocalDate.now();
-        LocalDate startOfWeek = currentDate.with(DayOfWeek.MONDAY);
-        LocalDate endOfWeek = currentDate.with(DayOfWeek.SUNDAY);
+        LocalDateTime currentDateTime = LocalDate.now().atStartOfDay();
+        LocalDateTime startOfWeek = currentDateTime.with(DayOfWeek.MONDAY);
+        LocalDateTime endOfWeek = currentDateTime.with(DayOfWeek.SUNDAY).plusDays(1).minusNanos(1);
 
-        List<PlaceBookmarkRes.Place> restaurantList = getPlacesByBookmarkCnt(1L, startOfWeek, endOfWeek);
-        List<PlaceBookmarkRes.Place> cafeList = getPlacesByBookmarkCnt(2L, startOfWeek, endOfWeek);
-        List<PlaceBookmarkRes.Place> playList = getPlacesByBookmarkCnt(3L, startOfWeek, endOfWeek);
+        Pageable pageable = PageRequest.of(0, 2);
+        List<PlaceBookmarkRes.Place> restaurantList = getPlacesByBookmarkCnt(1L, startOfWeek, endOfWeek,pageable);
+        List<PlaceBookmarkRes.Place> cafeList = getPlacesByBookmarkCnt(2L, startOfWeek, endOfWeek,pageable);
+        List<PlaceBookmarkRes.Place> playList = getPlacesByBookmarkCnt(3L, startOfWeek, endOfWeek,pageable);
 
         return new PlaceBookmarkRes(restaurantList,cafeList,playList);
     }
 
-    private List<PlaceBookmarkRes.Place> getPlacesByBookmarkCnt(Long category, LocalDate startOfWeek, LocalDate endOfWeek) {
-        List<Place> placeList = placeRepository.findByBookmarkCntInMain(category, startOfWeek.toString(), endOfWeek.toString());
+    private List<PlaceBookmarkRes.Place> getPlacesByBookmarkCnt(Long category, LocalDateTime startOfWeek, LocalDateTime endOfWeek, Pageable pageable) {
+        List<Place> placeList = placeRepository.findByBookmarkCntInMain(category, startOfWeek, endOfWeek,pageable);
         List<PlaceBookmarkRes.Place> result = new ArrayList<>();
 
         for (Place place : placeList) {
