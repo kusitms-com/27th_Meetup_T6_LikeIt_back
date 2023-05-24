@@ -86,7 +86,12 @@ public class PlaceCategoryService {
         }
 
 
-        if(orderBy == 5){  // orderBy가 5면 별점 오름차순 (별점 낮은순)
+        if(category1Id==2L){
+            if(orderBy == 5){
+                return placeFilterRepository.findAllCategory1ASC(category1Id, filters);
+            }
+            return placeFilterRepository.findAllCategory1(category1Id, orderBy, filters);
+        }else if(orderBy == 5){  // orderBy가 5면 별점 오름차순 (별점 낮은순)
             return placeFilterRepository.findAllCategory1AndCategory2ASC(category1Id, category2Id, filters);
         } //나머지는 조건에 따라 내림차순
         return placeFilterRepository.findAllCategory1AndCategory2(category1Id, category2Id, orderBy, filters);
