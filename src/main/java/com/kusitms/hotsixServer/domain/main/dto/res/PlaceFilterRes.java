@@ -10,10 +10,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class GetPlaceFilterRes {
+public class PlaceFilterRes {
     private Long id;
     private String name;
     private String img;
     private float rating;
-    private List<GetStickerRes> stickers;
+    private List<StickerRes> stickers;
 }

@@ -1,9 +1,14 @@
 package com.kusitms.hotsixServer.domain.main.service;
 
-import com.kusitms.hotsixServer.domain.main.dto.res.GetPlaceBookmarkRes;
-import com.kusitms.hotsixServer.domain.main.dto.res.GetPlaceFilterRes;
-import com.kusitms.hotsixServer.domain.main.dto.res.GetStickerRes;
+import com.kusitms.hotsixServer.domain.main.dto.req.SearchReq;
+import com.kusitms.hotsixServer.domain.main.dto.res.PlaceBookmarkRes;
+import com.kusitms.hotsixServer.domain.main.dto.res.PlaceFilterRes;
+import com.kusitms.hotsixServer.domain.main.dto.res.StickerRes;
+import com.kusitms.hotsixServer.domain.place.dto.PlaceListDto;
+import com.kusitms.hotsixServer.domain.place.dto.req.CategoryPlaceReq;
+import com.kusitms.hotsixServer.domain.place.entity.Category2;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
+import com.kusitms.hotsixServer.domain.place.repository.Category2Repository;
 import com.kusitms.hotsixServer.domain.place.repository.PlaceRepository;
 import com.kusitms.hotsixServer.domain.review.repository.StickerRepository;
 import com.kusitms.hotsixServer.domain.user.entity.User;
@@ -29,15 +34,16 @@ public class MainService {
     private final PlaceRepository placeRepository;
     private final UserRepository userRepository;
     private final StickerRepository stickerRepository;
+    private final Category2Repository category2Repository;
 
-    public List<GetPlaceFilterRes> getPlacesByFilter(){
+    public List<PlaceFilterRes> getPlacesByFilter(){
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
         List<Place> placeList = placeRepository.findByFilterInMain(user.getId());
-        List<GetPlaceFilterRes> result = new ArrayList<>();
+        List<PlaceFilterRes> result = new ArrayList<>();
 
         for(Place place:placeList){
-            List<GetStickerRes> stickerList = stickerRepository.findTop2Stickers(place.getId());
-            GetPlaceFilterRes dto = new GetPlaceFilterRes(place.getId(),place.getName(),place.getPlaceImg(),place.getStarRating(),stickerList);
+            List<StickerRes> stickerList = stickerRepository.findTop2Stickers(place.getId());
+            PlaceFilterRes dto = new PlaceFilterRes(place.getId(),place.getName(),place.getPlaceImg(),place.getStarRating(),stickerList);
             result.add(dto);
         }
 
@@ -45,25 +51,45 @@ public class MainService {
 
     }
 
-    public GetPlaceBookmarkRes getTopBookmark() {
+    public PlaceBookmarkRes getTopBookmark() {
         LocalDate currentDate = LocalDate.now();
         LocalDate startOfWeek = currentDate.with(DayOfWeek.MONDAY);
         LocalDate endOfWeek = currentDate.with(DayOfWeek.SUNDAY);
 
-        List<GetPlaceBookmarkRes.Place> restaurantList = getPlacesByBookmarkCnt(1L, startOfWeek, endOfWeek);
-        List<GetPlaceBookmarkRes.Place> cafeList = getPlacesByBookmarkCnt(2L, startOfWeek, endOfWeek);
-        List<GetPlaceBookmarkRes.Place> playList = getPlacesByBookmarkCnt(3L, startOfWeek, endOfWeek);
+        List<PlaceBookmarkRes.Place> restaurantList = getPlacesByBookmarkCnt(1L, startOfWeek, endOfWeek);
+        List<PlaceBookmarkRes.Place> cafeList = getPlacesByBookmarkCnt(2L, startOfWeek, endOfWeek);
+        List<PlaceBookmarkRes.Place> playList = getPlacesByBookmarkCnt(3L, startOfWeek, endOfWeek);
 
-        return new GetPlaceBookmarkRes(restaurantList,cafeList,playList);
+        return new PlaceBookmarkRes(restaurantList,cafeList,playList);
     }
 
-    private List<GetPlaceBookmarkRes.Place> getPlacesByBookmarkCnt(Long category, LocalDate startOfWeek, LocalDate endOfWeek) {
+    private List<PlaceBookmarkRes.Place> getPlacesByBookmarkCnt(Long category, LocalDate startOfWeek, LocalDate endOfWeek) {
         List<Place> placeList = placeRepository.findByBookmarkCntInMain(category, startOfWeek.toString(), endOfWeek.toString());
-        List<GetPlaceBookmarkRes.Place> result = new ArrayList<>();
+        List<PlaceBookmarkRes.Place> result = new ArrayList<>();
 
         for (Place place : placeList) {
-            GetPlaceBookmarkRes.Place dto = new GetPlaceBookmarkRes.Place(place.getId(), place.getName(), place.getPlaceImg());
+            PlaceBookmarkRes.Place dto = new PlaceBookmarkRes.Place(place.getId(), place.getName(), place.getPlaceImg());
             result.add(dto);
+        }
+
+        return result;
+    }
+
+    public List<PlaceListDto.PlaceInfo> getPlacesBySearch(SearchReq req) {
+        Long category2Id = req.getCategory2() != null ? category2Repository.findByName(req.getCategory2()).getId() : 0L;
+
+        String[] filters = req.getFilters();
+        if (filters == null) {
+            filters = new String[]{"조용한", "색다른", "전통적인", "모던한", "화려한", "로맨틱한", "활기찬", "트렌디한"};
+        }
+
+        List<Place> placeList = placeRepository.findPlacesBySearch(req.getWord(),category2Id, filters, req.getOrderBy());
+        log.info(placeList.size()+" ");
+        List<PlaceListDto.PlaceInfo> result = new ArrayList<>();
+        for (Place place : placeList) {
+            List<StickerRes> stickerList = stickerRepository.findTop2Stickers(place.getId());
+            PlaceListDto.PlaceInfo placeInfo = PlaceListDto.PlaceInfo.from(place, stickerList);
+            result.add(placeInfo);
         }
 
         return result;
