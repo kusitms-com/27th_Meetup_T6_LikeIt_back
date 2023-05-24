@@ -1,6 +1,6 @@
 package com.kusitms.hotsixServer.domain.place.service;
 
-import com.kusitms.hotsixServer.domain.main.dto.res.GetStickerRes;
+import com.kusitms.hotsixServer.domain.main.dto.res.StickerRes;
 import com.kusitms.hotsixServer.domain.place.dto.PlaceDetailDto;
 import com.kusitms.hotsixServer.domain.place.entity.Bookmark;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
@@ -90,7 +90,7 @@ public class PlaceDetailService {
                 .build();
     }
 
-    public List<GetStickerRes> StickerInfo(Review review){
+    public List<StickerRes> StickerInfo(Review review){
         return stickerRepository.findStickers(review.getId());
     }
 

@@ -24,6 +24,6 @@ public class SampleController {
 
     @PostMapping(value = "/stickers")
     public String  stickers(@RequestPart(value = "file", required = false) MultipartFile multipartFile){
-        return s3UploadUtil.upload(multipartFile, "sticker");
+        return s3UploadUtil.upload(multipartFile, "places");
     }
 }

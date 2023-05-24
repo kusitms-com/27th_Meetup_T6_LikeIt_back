@@ -1,6 +1,6 @@
 package com.kusitms.hotsixServer.domain.place.service;
 
-import com.kusitms.hotsixServer.domain.main.dto.res.GetStickerRes;
+import com.kusitms.hotsixServer.domain.main.dto.res.StickerRes;
 import com.kusitms.hotsixServer.domain.place.dto.PlaceListDto;
 import com.kusitms.hotsixServer.domain.place.dto.req.CategoryPlaceReq;
 import com.kusitms.hotsixServer.domain.place.entity.Bookmark;
@@ -99,7 +99,7 @@ public class PlaceCategoryService {
 
 
     private PlaceListDto.PlaceInfo createPlaceInfo(Place place, User user) {
-        List<GetStickerRes> stickerList = stickerRepository.findTop2Stickers(place.getId());
+        List<StickerRes> stickerList = stickerRepository.findTop2Stickers(place.getId());
 
         return PlaceListDto.PlaceInfo.builder()
                 .id(place.getId())

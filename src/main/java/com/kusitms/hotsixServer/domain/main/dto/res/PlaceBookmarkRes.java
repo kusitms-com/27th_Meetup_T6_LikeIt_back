@@ -7,7 +7,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class GetPlaceBookmarkRes {
+public class PlaceBookmarkRes {
 
     private List<Place> restaurant;
     private List<Place> cafe;

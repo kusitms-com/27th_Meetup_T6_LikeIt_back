@@ -1,13 +1,11 @@
 package com.kusitms.hotsixServer.domain.user.service;
 
-import com.kusitms.hotsixServer.domain.main.dto.res.GetStickerRes;
+import com.kusitms.hotsixServer.domain.main.dto.res.StickerRes;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
-import com.kusitms.hotsixServer.domain.place.repository.BookmarkRepository;
 import com.kusitms.hotsixServer.domain.place.repository.PlaceRepository;
 import com.kusitms.hotsixServer.domain.place.dto.PlaceDetailDto;
 import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
 import com.kusitms.hotsixServer.domain.review.entity.Review;
-import com.kusitms.hotsixServer.domain.review.entity.ReviewSticker;
 import com.kusitms.hotsixServer.domain.review.repository.ReviewRepository;
 import com.kusitms.hotsixServer.domain.review.repository.StickerRepository;
 import com.kusitms.hotsixServer.domain.user.dto.req.FilterDtoReq;
@@ -108,7 +106,7 @@ public class MyPageService {
 
     }
 
-    public List<GetStickerRes> StickerInfo(Review review){
+    public List<StickerRes> StickerInfo(Review review){
         return stickerRepository.findStickers(review.getId());
     }
 

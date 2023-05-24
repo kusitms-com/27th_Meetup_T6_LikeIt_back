@@ -1,6 +1,8 @@
 package com.kusitms.hotsixServer.domain.place.dto;
 
-import com.kusitms.hotsixServer.domain.main.dto.res.GetStickerRes;
+import com.kusitms.hotsixServer.domain.main.dto.res.StickerRes;
+import com.kusitms.hotsixServer.domain.place.entity.Place;
+import com.kusitms.hotsixServer.domain.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -21,6 +23,21 @@ public class PlaceListDto {
         private String content;
         private String openingHours;
         private char isBookmarked;
-        private List<GetStickerRes> top2stickers;
+        private List<StickerRes> top2stickers;
+
+        public static PlaceInfo from(Place place, List<StickerRes> stickers){
+            return PlaceInfo.builder()
+                    .id(place.getId())
+                    .name(place.getName())
+                    .starRating(place.getStarRating())
+                    .reviewCount(place.getReviewCount())
+                    .placeImg(place.getPlaceImg())
+                    .content(place.getContent())
+                    .openingHours(place.getOpeningHours())
+                    .top2stickers(stickers)
+                    .build();
+        }
+
+
     }
 }

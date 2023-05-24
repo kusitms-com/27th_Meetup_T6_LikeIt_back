@@ -1,6 +1,6 @@
 package com.kusitms.hotsixServer.domain.review.dto;
 
-import com.kusitms.hotsixServer.domain.main.dto.res.GetStickerRes;
+import com.kusitms.hotsixServer.domain.main.dto.res.StickerRes;
 import com.kusitms.hotsixServer.domain.place.dto.PlaceDetailDto;
 import lombok.*;
 
@@ -19,10 +19,10 @@ public class ReviewDto {
         private String content;
         private int likeCount;
         private int dislikeCount;
-        private List<GetStickerRes> stickers;
+        private List<StickerRes> stickers;
 
 
-        public static reviewRes from(Long id, String name, String img, float starRating, String content, int likeCount, int dislikeCount, List<GetStickerRes> stickers){
+        public static reviewRes from(Long id, String name, String img, float starRating, String content, int likeCount, int dislikeCount, List<StickerRes> stickers){
             return reviewRes.builder()
                     .id(id)
                     .username(name)
