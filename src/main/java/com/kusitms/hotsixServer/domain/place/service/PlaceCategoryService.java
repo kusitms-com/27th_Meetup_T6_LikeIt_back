@@ -1,7 +1,7 @@
 package com.kusitms.hotsixServer.domain.place.service;
 
 import com.kusitms.hotsixServer.domain.main.dto.res.StickerRes;
-import com.kusitms.hotsixServer.domain.place.dto.PlaceListDto;
+import com.kusitms.hotsixServer.domain.place.dto.res.CategoryPlaceRes;
 import com.kusitms.hotsixServer.domain.place.dto.req.CategoryPlaceReq;
 import com.kusitms.hotsixServer.domain.place.entity.Bookmark;
 import com.kusitms.hotsixServer.domain.place.entity.Category2;
@@ -45,17 +45,17 @@ public class PlaceCategoryService {
 
     }
 
-    public PlaceListDto getPlacesByCategory1Response(Long Category1Id, CategoryPlaceReq dto) {
+    public CategoryPlaceRes getPlacesByCategory1Response(Long Category1Id, CategoryPlaceReq dto) {
         List<Place> places = getPlacesByCategory1(Category1Id, dto); //조건에 맞는 장소 List 출력
-        List<PlaceListDto.PlaceInfo> placeInfos = new ArrayList<>();
+        List<CategoryPlaceRes.PlaceInfo> placeInfos = new ArrayList<>();
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow();
 
         for (Place place : places) {
-            PlaceListDto.PlaceInfo placeInfo = createPlaceInfo(place, user);
+            CategoryPlaceRes.PlaceInfo placeInfo = createPlaceInfo(place, user);
             placeInfos.add(placeInfo);
         }
 
-        return PlaceListDto.builder()
+        return CategoryPlaceRes.builder()
                 .places(placeInfos)
                 .build();
     }
@@ -98,10 +98,10 @@ public class PlaceCategoryService {
     }
 
 
-    private PlaceListDto.PlaceInfo createPlaceInfo(Place place, User user) {
+    private CategoryPlaceRes.PlaceInfo createPlaceInfo(Place place, User user) {
         List<StickerRes> stickerList = stickerRepository.findTop2Stickers(place.getId());
 
-        return PlaceListDto.PlaceInfo.builder()
+        return CategoryPlaceRes.PlaceInfo.builder()
                 .id(place.getId())
                 .name(place.getName())
                 .starRating(place.getStarRating())

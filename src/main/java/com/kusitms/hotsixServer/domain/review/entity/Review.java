@@ -1,7 +1,7 @@
 package com.kusitms.hotsixServer.domain.review.entity;
 
 import com.kusitms.hotsixServer.domain.place.entity.Place;
-import com.kusitms.hotsixServer.domain.review.dto.RequestReviewDto;
+import com.kusitms.hotsixServer.domain.review.dto.req.ReviewReq;
 import com.kusitms.hotsixServer.domain.user.entity.User;
 import com.kusitms.hotsixServer.global.common.BaseTimeEntity;
 import lombok.*;
@@ -52,7 +52,7 @@ public class Review extends BaseTimeEntity {
     private List<ReviewSticker> reviewStickers = new ArrayList<>();
     
     @Builder
-    public static Review createReview (User user, Place place, String imgPath, RequestReviewDto dto) {
+    public static Review createReview (User user, Place place, String imgPath, ReviewReq dto) {
         return Review.builder()
                 .user(user)
                 .place(place)

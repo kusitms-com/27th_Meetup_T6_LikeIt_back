@@ -2,7 +2,7 @@ package com.kusitms.hotsixServer.domain.review.service;
 
 import com.kusitms.hotsixServer.domain.place.entity.Place;
 import com.kusitms.hotsixServer.domain.place.repository.PlaceRepository;
-import com.kusitms.hotsixServer.domain.review.dto.RequestReviewDto;
+import com.kusitms.hotsixServer.domain.review.dto.req.ReviewReq;
 import com.kusitms.hotsixServer.domain.review.entity.Review;
 import com.kusitms.hotsixServer.domain.review.entity.ReviewSticker;
 import com.kusitms.hotsixServer.domain.review.entity.Sticker;
@@ -38,7 +38,7 @@ public class ReviewService {
     private final S3UploadUtil s3UploadUtil;
 
     @Transactional
-    public void createReview(RequestReviewDto dto, MultipartFile reviewImg) {
+    public void createReview(ReviewReq dto, MultipartFile reviewImg) {
 
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow();
         Place place = placeRepository.findById(dto.getPlaceId()).orElseThrow();

@@ -3,7 +3,7 @@ package com.kusitms.hotsixServer.domain.user.service;
 import com.kusitms.hotsixServer.domain.main.dto.res.StickerRes;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
 import com.kusitms.hotsixServer.domain.place.repository.PlaceRepository;
-import com.kusitms.hotsixServer.domain.place.dto.PlaceDetailDto;
+import com.kusitms.hotsixServer.domain.place.dto.res.PlaceDetailRes;
 import com.kusitms.hotsixServer.domain.review.dto.ReviewDto;
 import com.kusitms.hotsixServer.domain.review.entity.Review;
 import com.kusitms.hotsixServer.domain.review.repository.ReviewRepository;
@@ -96,7 +96,7 @@ public class MyPageService {
             ReviewDto.reviewRes reviewDto = ReviewDto.reviewRes.from(review.getId(), review.getUser().getNickname(), review.getReviewImg(), review.getStarRating(), review.getContent()
                     , review.getLikeCount(), review.getDislikeCount(), StickerInfo(review));
             //장소 DTO
-            PlaceDetailDto.SimplePlaceRes placeInfo = new PlaceDetailDto.SimplePlaceRes(review.getPlace().getId(), review.getPlace().getName());
+            PlaceDetailRes.SimplePlaceRes placeInfo = new PlaceDetailRes.SimplePlaceRes(review.getPlace().getId(), review.getPlace().getName());
 
             ReviewDto.myReviewRes myReviewRes = ReviewDto.myReviewRes.from(reviewDto, placeInfo);
             myReviewResponses.add(myReviewRes);
@@ -122,13 +122,13 @@ public class MyPageService {
 
     }
 
-    public List<PlaceDetailDto.SimplePlaceRes2> getBookmark() {
+    public List<PlaceDetailRes.SimplePlaceRes2> getBookmark() {
         User user = userRepository.findByUserEmail(getCurrentUserEmail()).orElseThrow(); //유저 정보
 
         List<Place> placeList = placeRepository.findForBookmark(user.getId());
-        List<PlaceDetailDto.SimplePlaceRes2> result = new ArrayList<>();
+        List<PlaceDetailRes.SimplePlaceRes2> result = new ArrayList<>();
         for (Place place : placeList) {
-            PlaceDetailDto.SimplePlaceRes2 placeInfo = new PlaceDetailDto.SimplePlaceRes2(place.getId(),place.getName(),place.getPlaceImg());
+            PlaceDetailRes.SimplePlaceRes2 placeInfo = new PlaceDetailRes.SimplePlaceRes2(place.getId(),place.getName(),place.getPlaceImg());
             result.add(placeInfo);
         }
 

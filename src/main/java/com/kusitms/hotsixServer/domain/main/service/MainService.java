@@ -4,9 +4,7 @@ import com.kusitms.hotsixServer.domain.main.dto.req.SearchReq;
 import com.kusitms.hotsixServer.domain.main.dto.res.PlaceBookmarkRes;
 import com.kusitms.hotsixServer.domain.main.dto.res.PlaceFilterRes;
 import com.kusitms.hotsixServer.domain.main.dto.res.StickerRes;
-import com.kusitms.hotsixServer.domain.place.dto.PlaceListDto;
-import com.kusitms.hotsixServer.domain.place.dto.req.CategoryPlaceReq;
-import com.kusitms.hotsixServer.domain.place.entity.Category2;
+import com.kusitms.hotsixServer.domain.place.dto.res.CategoryPlaceRes;
 import com.kusitms.hotsixServer.domain.place.entity.Place;
 import com.kusitms.hotsixServer.domain.place.repository.Category2Repository;
 import com.kusitms.hotsixServer.domain.place.repository.PlaceRepository;
@@ -75,7 +73,7 @@ public class MainService {
         return result;
     }
 
-    public List<PlaceListDto.PlaceInfo> getPlacesBySearch(SearchReq req) {
+    public List<CategoryPlaceRes.PlaceInfo> getPlacesBySearch(SearchReq req) {
         Long category2Id = req.getCategory2() != null ? category2Repository.findByName(req.getCategory2()).getId() : 0L;
 
         String[] filters = req.getFilters();
@@ -85,10 +83,10 @@ public class MainService {
 
         List<Place> placeList = placeRepository.findPlacesBySearch(req.getWord(),category2Id, filters, req.getOrderBy());
         log.info(placeList.size()+" ");
-        List<PlaceListDto.PlaceInfo> result = new ArrayList<>();
+        List<CategoryPlaceRes.PlaceInfo> result = new ArrayList<>();
         for (Place place : placeList) {
             List<StickerRes> stickerList = stickerRepository.findTop2Stickers(place.getId());
-            PlaceListDto.PlaceInfo placeInfo = PlaceListDto.PlaceInfo.from(place, stickerList);
+            CategoryPlaceRes.PlaceInfo placeInfo = CategoryPlaceRes.PlaceInfo.from(place, stickerList);
             result.add(placeInfo);
         }
 
