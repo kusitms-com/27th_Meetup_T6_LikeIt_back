@@ -308,7 +308,7 @@
 
 
 ### 📑 소프트웨어 아키텍쳐
-<img width="951" alt="KakaoTalk_20230414_173738822" src="https://user-images.githubusercontent.com/100370200/232049796-1df81377-3e85-4c9e-bd84-6ac4e2dc8818.png">
+<img width="499" alt="image" src="https://github.com/27-kusitms-6/Backend/assets/98975580/d54f39f6-5430-4c51-800a-0ca7c3f48c12">
 
 ### 프로젝트 기본 세팅
 
