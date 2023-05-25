@@ -56,9 +56,11 @@ public class Place extends BaseTimeEntity {
     private Category2 category2;
 
     @OneToMany(mappedBy = "place",cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<PlaceFilter> placeFilters = new ArrayList<>();
 
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Bookmark> bookmarks = new ArrayList<>();
 
 }
